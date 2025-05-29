@@ -27,7 +27,6 @@ export default function Experiences() {
       className="section pb-24"
     >
       <h2 className="text-3xl font-semibold mb-6 flex md:gap-x-3 items-center text-black/80 dark:text-white/80">
-        <i className="fa-solid fa-briefcase"></i>
         {t("title_exp")}
       </h2>
       <ol className="relative border-s border-gray-200 md:ml-3">

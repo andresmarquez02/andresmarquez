@@ -26,12 +26,12 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-screen-xl">
         <div className="px-4 py-6 md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-500 dark:text-gray-300 sm:text-center">
-            © 2024 - Andres Marquez
+            2025 - Andres Marquez
           </span>
           <div className="flex mt-4 sm:justify-center md:mt-0 space-x-5 rtl:space-x-reverse">
             {contacts.map((item, key) => (
               <a
-                className="text-gray-400 hover:text-white dark:hover:text-whit"
+                className="text-gray-400 hover:text-gray-700 dark:hover:text-white"
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"

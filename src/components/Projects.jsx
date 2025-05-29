@@ -72,7 +72,6 @@ export default function Projects() {
       className="section pb-24"
     >
       <h2 className="text-3xl font-semibold mb-6 flex gap-x-3 items-center text-black/80 dark:text-white/80">
-        <i className="fa-solid fa-code"></i>
         {t("title_projects")}
       </h2>
       <div className="flex flex-col gap-y-16">

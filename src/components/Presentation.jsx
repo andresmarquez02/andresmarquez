@@ -28,12 +28,13 @@ export default function Presentation() {
           src={Image}
           alt="andresmarquez photo"
         />
-        <button
+        <a
+          href="https://wa.me/+584129298833"
           type="button"
           className="text-green-400 hover:text-white dark:text-white border border-green-400 hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium md:text-xs px-5 py-2.5 text-center me-2 mb-2 dark:border-green-500 dark:hover:text-white dark:hover:bg-green-500 dark:focus:ring-green-400 rounded-full ms-4 transition-all ease-in-out delay-75"
         >
           {t("availability")}
-        </button>
+        </a>
       </div>
       <h1 className="text-gray-900 dark:text-white text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row gap-x-4 pb-6 lg:pb-10">
         {t("hi")}
@@ -49,7 +50,7 @@ export default function Presentation() {
         </span>
         .
         <span className="text-red-800 dark:text-red-400">
-          &nbsp;{t("text3")}
+          &nbsp;{t("text4")}
         </span>
       </h2>
       <nav className="flex gap-4 mt-8 flex-wrap">
