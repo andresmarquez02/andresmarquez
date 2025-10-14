@@ -21,7 +21,7 @@ export default function Presentation() {
     },
   ];
   return (
-    <section className="section pb-24">
+    <section className="section pb-10">
       <div className="flex items-center mb-4">
         <img
           className="rounded-full size-24"

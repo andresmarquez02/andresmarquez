@@ -5,6 +5,11 @@ export default function Experiences() {
   const { t, i18n } = useTranslation(["lang"]);
   const experiences = [
     {
+      date: 'date_exp0',
+      title: 'title_exp0',
+      description: 'description_exp0',
+    },
+    {
       date: 'date_exp1',
       title: 'title_exp1',
       description: 'description_exp1',
@@ -18,6 +23,11 @@ export default function Experiences() {
       date: 'date_exp3',
       title: 'title_exp3',
       description: 'description_exp3',
+    },
+    {
+      date: 'date_exp4',
+      title: 'title_exp4',
+      description: 'description_exp4',
     }
   ];
   return (
@@ -29,6 +39,7 @@ export default function Experiences() {
       <h2 className="text-3xl font-semibold mb-6 flex md:gap-x-3 items-center text-black/80 dark:text-white/80">
         {t("title_exp")}
       </h2>
+
       <ol className="relative border-s border-gray-200 md:ml-3">
         {
           experiences.map((experience, key) => <Experience key={key} experience={experience}/>)
