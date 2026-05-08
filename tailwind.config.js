@@ -1,15 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    'node_modules/flowbite-react/lib/esm/**/*.js',
-  ],
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['"Onest"', '"Onest Variable"', "system-ui", "sans-serif"],
+      },
+    },
   },
-  plugins: [
-    require('flowbite/plugin')
-]
-}
-
+  plugins: [],
+};

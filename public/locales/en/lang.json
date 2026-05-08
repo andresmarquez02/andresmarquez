@@ -3,42 +3,50 @@
   "projects": "Projects",
   "about": "About",
   "contact": "Contact",
+  "language": "Language",
 
-  "availability": "Available to work",
-  "hi": "Hi, I'm Andres Marquez",
+  "availability": "Available for work",
+  "hi": "Hi, I'm Andrés Márquez",
   "text1": "+3 years of experience.",
   "text2": "Fullstack Developer",
   "text3": "From Caracas, Venezuela",
-  "text4": "Specialized in Laravel/Vue",
+  "text4": "Specialized in Laravel, Vue, React and Next.js",
   "contact_me": "Contact me",
 
-  "title_exp": "Work Experience",
+  "title_exp": "Work experience",
   "brands_worked": "Brands I've worked with",
+
   "date_exp0": "May 2024 - Present",
-  "title_exp0": "Frontend Developer - Leadbox",
-  "description_exp0": "Implemented improvements alongside Ford to enhance the updating of information on their promotions and informational pages. Worked closely with Land Rover on dealership audits. Improved the efficiency of the WordPress platform using Laravel, Vue and Tailwind, reducing average load times by 40% in less than 30 hours and increasing customer satisfaction.",
+  "title_exp0": "Frontend Developer · Leadbox (Ontario, Canada - Remote)",
+  "description_exp0": "Resolved 500+ frontend tickets for 100+ automotive clients, improving performance and user experience across their websites. Optimized code efficiency on WordPress platforms using Laravel, Vue.js and Tailwind CSS, cutting average load times by 40% in under 30 hours. Collaborated with cross-functional teams to ship high-impact solutions across nationwide dealer networks, improving scalability and responsiveness.",
+
   "date_exp1": "September 2024 - January 2025",
-  "title_exp1": "Fullstack Developer - Valdusoft",
-  "description_exp1": "Development of a management system for the first dropshipping in Venezuela. I developed functionalities for the administrator and inter-warehouse purchase management. I worked closely with the server team for the deployment of the project, ensuring a successful and efficient implementation of the system in production.",
-  "date_exp2": "December 2022- July 2023",
-  "title_exp2": "Fullstack Developer - Vulister",
-  "description_exp2": "Achieve significant frontend improvements, increasing system performance by 80% and improving user experience. I collaborated in the restructuring of the database, increasing its scalability and maintenance. Developed 90% of the functions for users and administrators. Additionally, I created more than 14 interactive websites for the company's clients.",
+  "title_exp1": "Fullstack Developer · Valdusoft",
+  "description_exp1": "Built a management system for the first dropshipping operation in Venezuela, delivering admin features and inter-warehouse purchase management. Worked closely with the infrastructure team to ensure a successful and efficient production deployment.",
+
+  "date_exp2": "December 2022 - July 2023",
+  "title_exp2": "Fullstack Developer · Vulister (Tenerife, Spain - Remote)",
+  "description_exp2": "Increased frontend performance by 80%, significantly improving user experience. Participated in restructuring the database, optimizing and removing inefficient tables. Delivered 90% of the planned admin features and built 14+ interactive and informational websites for company clients.",
+
   "date_exp3": "April 2021 - November 2022",
-  "title_exp3": "Fullstack Developer - Monchis Mercado",
-  "description_exp3": "In charge of designing the interactions, the database and the essential requirements for the development and operation of the system, I managed to create a usable and secure site that provides an optimal experience to users. By automating internal processes, I met the company's objectives, improving its performance and guaranteeing technological growth.",
+  "title_exp3": "Fullstack Developer · Monchis Mercado (Venezuela)",
+  "description_exp3": "Defined system requirements and project goals in direct collaboration with the company. Designed and built the database architecture applying best practices and normalization principles. Developed the full business-logic layer, delivering a robust, secure and efficient system, and automated internal manual processes to boost operational performance.",
+
   "date_exp4": "July 2020 - February 2021",
-  "title_exp4": "Fullstack Developer - Multiparadise",
-  "description_exp4": "I implemented significant improvements to the interfaces, achieving an 85% increase in application performance. I detected, restructured and fixed various errors and functionalities that impacted the system logic. Additionally, I integrated payment methods for user subscriptions and designed new modules linked to the administrator role.",
+  "title_exp4": "Fullstack Developer · Multiparadise (Venezuela - Hybrid)",
+  "description_exp4": "Collaborated with the UX/UI team to improve interface design, boosting application performance by 85%. Debugged and fixed multiple system-logic issues to keep the app stable. Refactored 75% of the codebase, significantly improving response times, and built admin modules and custom features to extend platform capabilities.",
 
   "title_projects": "Projects",
-  "description_project1": "WhatsApp clone that uses authentication through Google to allow users to chat with each other.",
-  "description_project2": "Online store with home delivery service, simulation of product batches using the Pexels API and storage in LocalStorage for the shopping cart.",
-  "description_project3": "Platform inspired by Yahoo and Stack Overflow that allows users to ask questions and seek opinions on a specific topic.",
-  "code": "Code",
-  "view": "Preview",
-  "about_title": "About",
-  "about_me": "Hi, I'm Andrés Márquez 🤓 fullstack developer with extensive and proven experience in the use of various technologies such as Laravel, Vue and React, passionate about web development that enjoys every moment spent developing high quality and efficient software. For me, there is nothing better than listening to my favorite music 🎶 while working on highly complex software projects. Always oriented to the constant search of learning new technologies that allow me to improve my skills as a 📈 programmer in order to offer innovative and high quality solutions to my clients and users. If you are currently looking for a passionate developer, component, responsible and highly efficient do not hesitate for a second to contact me, always ready to take your projects to the next level! 💼💻",
+  "description_project1": "Corporate website for an automotive dealership built with Laravel, Vue.js and Tailwind CSS.",
+  "description_project2": "Online store with home delivery, catalog simulation using the Pexels API and a LocalStorage-backed shopping cart.",
+  "description_project3": "Q&A platform inspired by Yahoo Answers and Stack Overflow.",
+  "code": "View code",
+  "view": "Visit site",
+
+  "about_title": "About me",
+  "about_me": "I'm Andrés Márquez, a fullstack developer with 3+ years of experience building modern web applications with Laravel, Vue.js and React. Proactive and self-taught, results-driven and quick to adopt new technologies. Proven track record of performance optimization, load-time reduction and high-quality delivery for clients in North America and Europe. If you're looking for a passionate, reliable and highly effective developer, feel free to reach out.",
+
   "spanish": "Spanish",
   "english": "English",
-  "change_theme": "Change Theme"
+  "change_theme": "Change theme"
 }

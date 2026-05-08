@@ -1,49 +1,26 @@
-import Experience from "./Experience";
 import { useTranslation } from "react-i18next";
+import Experience from "./Experience";
+
+const EXPERIENCES = [
+  { id: "exp0", date: "date_exp0", title: "title_exp0", description: "description_exp0" },
+  { id: "exp1", date: "date_exp1", title: "title_exp1", description: "description_exp1" },
+  { id: "exp2", date: "date_exp2", title: "title_exp2", description: "description_exp2" },
+  { id: "exp3", date: "date_exp3", title: "title_exp3", description: "description_exp3" },
+  { id: "exp4", date: "date_exp4", title: "title_exp4", description: "description_exp4" },
+];
 
 export default function Experiences() {
-  const { t, i18n } = useTranslation(["lang"]);
-  const experiences = [
-    {
-      date: 'date_exp0',
-      title: 'title_exp0',
-      description: 'description_exp0',
-    },
-    {
-      date: 'date_exp1',
-      title: 'title_exp1',
-      description: 'description_exp1',
-    },
-    {
-      date: 'date_exp2',
-      title: 'title_exp2',
-      description: 'description_exp2',
-    },
-    {
-      date: 'date_exp3',
-      title: 'title_exp3',
-      description: 'description_exp3',
-    },
-    {
-      date: 'date_exp4',
-      title: 'title_exp4',
-      description: 'description_exp4',
-    }
-  ];
+  const { t } = useTranslation();
+
   return (
-    <section
-      id="experience"
-      data-section="experience"
-      className="section pb-24"
-    >
+    <section id="experience" data-section="experience" className="section pb-24">
       <h2 className="text-3xl font-semibold mb-6 flex md:gap-x-3 items-center text-black/80 dark:text-white/80">
         {t("title_exp")}
       </h2>
-
-      <ol className="relative border-s border-gray-200 md:ml-3">
-        {
-          experiences.map((experience, key) => <Experience key={key} experience={experience}/>)
-        }
+      <ol className="relative border-s border-gray-200 dark:border-white/10 md:ml-3">
+        {EXPERIENCES.map((experience) => (
+          <Experience key={experience.id} experience={experience} />
+        ))}
       </ol>
     </section>
   );

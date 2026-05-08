@@ -1,45 +1,27 @@
-import { changeLanguage } from "i18next";
 import { useTranslation } from "react-i18next";
-import { Sidebar } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { HiOutlinePlusSm, HiOutlineMinusSm } from "react-icons/hi";
-import { AiOutlineTaobao } from "react-icons/ai";
-import { twMerge } from "tailwind-merge";
+import { useLanguage } from "../hooks/useLanguage";
 
-export default function ItemNav({ item }) {
-  const { t, i18n } = useTranslation(["lang"]);
-  const [langDefault, setlangDefault] = useState("");
+export default function SidebarLang() {
+  const { t } = useTranslation();
+  const { changeLanguage, supported, labels } = useLanguage();
 
-  useEffect(() => {
-    if (!localStorage.getItem("lang")) {
-      localStorage.setItem("lang", "en");
-    }
-    setMyLang(localStorage.getItem("lang"));
-  }, []);
-
-  const setMyLang = (lang) => {
-    i18n.changeLanguage(lang);
-    localStorage.setItem("lang", lang);
-    setlangDefault(localStorage.getItem("lang"));
-  };
   return (
-    <Sidebar.Collapse
-      icon={AiOutlineTaobao}
-      label="Language"
-      renderChevronIcon={(theme, open) => {
-        const IconComponent = open ? HiOutlineMinusSm : HiOutlinePlusSm;
-
-        return (
-          <IconComponent
-            aria-hidden
-            className={twMerge(theme.label.icon.open[open ? "on" : "off"])}
-          />
-        );
-      }}
-    >
-
-      <Sidebar.Item onClick={() => setMyLang("es")} href="#">{t('spanish')}</Sidebar.Item>
-      <Sidebar.Item  onClick={() => setMyLang("en")} href="#">{t('english')}</Sidebar.Item>
-    </Sidebar.Collapse>
+    <div className="px-3 py-2">
+      <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+        {t("language")}
+      </p>
+      <div className="flex gap-2">
+        {supported.map((code) => (
+          <button
+            key={code}
+            type="button"
+            onClick={() => changeLanguage(code)}
+            className="flex-1 rounded-lg border border-gray-200 dark:border-white/10 px-3 py-2 text-sm hover:bg-white/10 transition"
+          >
+            {t(labels[code])}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

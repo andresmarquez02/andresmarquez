@@ -1,44 +1,52 @@
 {
   "experience": "Experiencia",
   "projects": "Proyectos",
-  "about": "Sobre",
+  "about": "Sobre mí",
   "contact": "Contacto",
-  
+  "language": "Idioma",
+
   "availability": "Disponible para trabajar",
-  "hi": " Hola, soy Andres Marquez",
+  "hi": "Hola, soy Andrés Márquez",
   "text1": "+3 años de experiencia.",
   "text2": "Desarrollador Fullstack",
-  "text3": "De Caracas, Venezuela",
-  "text4": "Especializado en Laravel/Vue",
+  "text3": "Desde Caracas, Venezuela",
+  "text4": "Especializado en Laravel, Vue, React y Next.js",
   "contact_me": "Contáctame",
 
-  "title_exp": "Experiencia Laboral",
+  "title_exp": "Experiencia laboral",
   "brands_worked": "Marcas con las que he trabajado",
+
   "date_exp0": "Mayo 2024 - Actualidad",
-  "title_exp0": "Frontend Developer - Leadbox",
-  "description_exp0": "Implementé mejoras de la mano con Ford para mejorar la actualización de la información de sus promociones y páginas informativas. Trabajé de la mano con Land Rover en auditorías a concesionarios. Mejoré la eficiencia de la plataforma WordPress utilizando Laravel, Vue y Tailwind, reduciendo los tiempos de carga promedio en un 40% en menos de 30 horas y aumentando la satisfacción del cliente.",
+  "title_exp0": "Frontend Developer · Leadbox (Ontario, Canadá - Remoto)",
+  "description_exp0": "Resolví más de 500 tickets frontend para más de 100 clientes de marcas automotrices, mejorando el rendimiento y la experiencia de usuario en sus sitios web. Optimicé la eficiencia del código en plataformas WordPress usando Laravel, Vue.js y Tailwind CSS, reduciendo los tiempos de carga promedio en un 40% en menos de 30 horas. Colaboré con equipos multifuncionales para implementar soluciones de alto impacto en redes de concesionarios a nivel nacional, mejorando la escalabilidad y responsividad.",
+
   "date_exp1": "Septiembre 2024 - Enero 2025",
-  "title_exp1": "Fullstack Developer - Valdusoft",
-  "description_exp1": "Desarrollo de un sistema de gestión para el primer dropshipping en Venezuela. Desarrollé funcionalidades para el administrador y gestión de compras entre bodegas. Trabajé de la mano con los encargados del servidor para el despliegue del proyecto, garantizando una implementación exitosa y eficiente del sistema en producción.",
-  "date_exp2": "Diciembre 2022- Julio 2023",
-  "title_exp2": "Fullstack Developer - Vulister",
-  "description_exp2": "Logre mejoras significativamente el frontend, aumentando el rendimiento del sistema en un 80% y mejorando la experiencia del usuario. Colaboré en la reestructuración de la base de datos aumentando su escalabilidad y mantenimiento. Desarrollé el 90% de las funciones para usuarios y administradores. Además, creé más de 14 sitios web interactivos para clientes de la empresa.",
+  "title_exp1": "Fullstack Developer · Valdusoft",
+  "description_exp1": "Desarrollé un sistema de gestión para el primer dropshipping de Venezuela, construyendo funcionalidades para el administrador y la gestión de compras entre bodegas. Trabajé junto al equipo de servidores para garantizar un despliegue exitoso y eficiente del sistema en producción.",
+
+  "date_exp2": "Diciembre 2022 - Julio 2023",
+  "title_exp2": "Fullstack Developer · Vulister (Tenerife, España - Remoto)",
+  "description_exp2": "Incrementé el rendimiento del frontend en un 80%, mejorando significativamente la experiencia de usuario. Participé en la reestructuración de la base de datos optimizando y eliminando tablas ineficientes. Desarrollé el 90% de las funcionalidades planificadas para usuarios administradores y creé más de 14 sitios web interactivos e informativos para clientes de la empresa.",
+
   "date_exp3": "Abril 2021 - Noviembre 2022",
-  "title_exp3": "Fullstack Developer - Monchis Mercado",
-  "description_exp3": "Encargado de diseñar las interacciones, la base de datos y los requisitos esenciales para el desarrollo y funcionamiento del sistema, logré crear un sitio usable y seguro que brinda una experiencia óptima a los usuarios. Automatizando procesos internos, cumplí con los objetivos de la empresa, mejorando su rendimiento y garantizando un crecimiento tecnológico.",
+  "title_exp3": "Fullstack Developer · Monchis Mercado (Venezuela)",
+  "description_exp3": "Definí los requisitos del sistema y los objetivos del proyecto en colaboración directa con la empresa. Diseñé y construí la arquitectura de base de datos aplicando buenas prácticas y principios de normalización. Desarrollé la lógica de negocio completa entregando un sistema robusto, seguro y eficiente, y automaticé procesos manuales internos para mejorar el rendimiento operativo.",
+
   "date_exp4": "Julio 2020 - Febrero 2021",
-  "title_exp4": "Fullstack Developer - Multiparadise",
-  "description_exp4": "Implementé mejoras significativas en las interfaces, logrando un aumento del 85% en el rendimiento de la aplicación. Detecté, reestructuré y solucioné diversos errores y funcionalidades que impactaban en la lógica del sistema. Además, integre métodos de pago para las suscripciones de los usuarios y diseñé nuevos módulos vinculados al rol de administrador.",
-  
+  "title_exp4": "Fullstack Developer · Multiparadise (Venezuela - Híbrido)",
+  "description_exp4": "Colaboré con el equipo de UX/UI para mejorar el diseño de interfaces, incrementando el rendimiento de la aplicación en un 85%. Depuré y resolví múltiples problemas de lógica del sistema garantizando una aplicación estable. Refactoricé el 75% del código base mejorando significativamente el tiempo de respuesta y desarrollé módulos de administración y funcionalidades personalizadas.",
+
   "title_projects": "Proyectos",
-  "description_project1": "Clon de WhatsApp que utiliza autenticación a través de Google para permitir a los usuarios chatear entre sí.",
-  "description_project2": "Tienda en línea con servicio de entrega a domicilio, simulación de lotes de productos utilizando la API de Pexels y almacenamiento en LocalStorage para el carrito de compras.",
-  "description_project3": "Plataforma inspirada en Yahoo y Stack Overflow que permite a los usuarios realizar preguntas y buscar opiniones sobre un tema específico.",
+  "description_project1": "Sitio web corporativo para concesionario automotriz construido con Laravel, Vue.js y Tailwind CSS.",
+  "description_project2": "Tienda en línea con servicio de entrega a domicilio, simulación de catálogo con la API de Pexels y carrito en LocalStorage.",
+  "description_project3": "Plataforma estilo Q&A inspirada en Yahoo Answers y Stack Overflow.",
   "code": "Ver código",
   "view": "Ir al sitio",
-  "about_title": "Sobre mi",
-  "about_me": "Hola. Soy Andrés Márquez 🤓 desarrollador fullstack con amplia y comprobable experiencia en el uso de diversas tecnología como Laravel, Vue y React, apasionado del desarrollo web que disfruta cada momento que pasa desarrollando software de alta calidad y eficiencia. Para mí, no hay nada mejor que escuchar mi música 🎶 favorita mientras trabajo en proyectos informaticos de alta complejidad. Siempre orientado a la búsqueda constante de aprender nuevas tecnologías que me permitan mejorar mis habilidades como 📈 programador para así ofrecer soluciones innovadoras y de alta calidad a mis clientes y usuarios. Si buscas actualmente un desarrollador apasionado, componente, responsable y alta mente eficaz no dudes ni un segundo en contactarme. ¡Siempre listo para llevar tus proyectos al siguiente nivel! 💼💻",
+
+  "about_title": "Sobre mí",
+  "about_me": "Soy Andrés Márquez, desarrollador fullstack con más de 3 años de experiencia construyendo aplicaciones web modernas con Laravel, Vue.js y React. Profesional proactivo y autodidacta, con fuerte orientación a resultados y capacidad demostrada de adaptación a nuevas tecnologías. Tengo un historial comprobado de optimización de rendimiento, reducción de tiempos de carga y entrega de soluciones de alta calidad para clientes en Norteamérica y Europa. Si buscas un desarrollador apasionado, responsable y altamente eficaz, no dudes en contactarme.",
+
   "spanish": "Español",
-  "english": "Ingles",
-  "change_theme": "Cambiar Tema"
+  "english": "Inglés",
+  "change_theme": "Cambiar tema"
 }
