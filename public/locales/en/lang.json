@@ -17,24 +17,28 @@
   "brands_worked": "Brands I've worked with",
 
   "date_exp0": "May 2024 - Present",
-  "title_exp0": "Frontend Developer · Leadbox (Ontario, Canada - Remote)",
+  "title_exp0": "Frontend Developer · Leadbox (Canada - Remote)",
   "description_exp0": "Resolved 500+ frontend tickets for 100+ automotive clients, improving performance and user experience across their websites. Optimized code efficiency on WordPress platforms using Laravel, Vue.js and Tailwind CSS, cutting average load times by 40% in under 30 hours. Collaborated with cross-functional teams to ship high-impact solutions across nationwide dealer networks, improving scalability and responsiveness.",
 
   "date_exp1": "September 2024 - January 2025",
-  "title_exp1": "Fullstack Developer · Valdusoft",
+  "title_exp1": "Fullstack Developer · Valdusoft (Venezuela - Remote)",
   "description_exp1": "Built a management system for the first dropshipping operation in Venezuela, delivering admin features and inter-warehouse purchase management. Worked closely with the infrastructure team to ensure a successful and efficient production deployment.",
 
   "date_exp2": "December 2022 - July 2023",
-  "title_exp2": "Fullstack Developer · Vulister (Tenerife, Spain - Remote)",
+  "title_exp2": "Fullstack Developer · Vulister (Spain - Remote)",
   "description_exp2": "Increased frontend performance by 80%, significantly improving user experience. Participated in restructuring the database, optimizing and removing inefficient tables. Delivered 90% of the planned admin features and built 14+ interactive and informational websites for company clients.",
 
   "date_exp3": "April 2021 - November 2022",
-  "title_exp3": "Fullstack Developer · Monchis Mercado (Venezuela)",
+  "title_exp3": "Fullstack Developer · Monchis Mercado (Venezuela - Hybrid)",
   "description_exp3": "Defined system requirements and project goals in direct collaboration with the company. Designed and built the database architecture applying best practices and normalization principles. Developed the full business-logic layer, delivering a robust, secure and efficient system, and automated internal manual processes to boost operational performance.",
 
   "date_exp4": "July 2020 - February 2021",
   "title_exp4": "Fullstack Developer · Multiparadise (Venezuela - Hybrid)",
   "description_exp4": "Collaborated with the UX/UI team to improve interface design, boosting application performance by 85%. Debugged and fixed multiple system-logic issues to keep the app stable. Refactored 75% of the codebase, significantly improving response times, and built admin modules and custom features to extend platform capabilities.",
+
+  "date_exp5": "November 2025 - May 2026",
+  "title_exp5": "Fullstack Developer & Automation Engineer · Distribuiciones Marver (Spain - Remote)",
+  "description_exp5": "Designed and built a custom ERP system to manage inventory, sales, purchases and finances. Automated internal manual processes to boost operational performance. Integrated the system with the company's e-commerce platform to synchronize inventory and sales data, improving efficiency and reducing errors.",
 
   "title_projects": "Projects",
   "description_project1": "Corporate website for an automotive dealership built with Laravel, Vue.js and Tailwind CSS.",

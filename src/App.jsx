@@ -1,28 +1,49 @@
+import { lazy, Suspense, useState } from "react";
 import About from "./components/About";
 import BrandsCarousel from "./components/BrandsCarousel";
+import Curtain from "./components/Curtain";
 import Experiences from "./components/Experiences";
 import Presentation from "./components/Presentation";
 import Projects from "./components/Projects";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
+import ScrollRail from "./layout/ScrollRail";
+import StatusBar from "./layout/StatusBar";
+import { useLenis } from "./hooks/useLenis";
+
+const HeroBackground = lazy(() => import("./components/HeroBackground"));
 
 export default function App() {
+  useLenis();
+  const [introDone, setIntroDone] = useState(false);
+
   return (
-    <div className="relative text-black dark:text-white">
-      <div className="absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-neutral-100 dark:bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(213,212,255,0.5),rgba(243,243,244,0.9))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
+    <div className="relative text-fg">
+      <Curtain onDone={() => setIntroDone(true)} />
+      <Suspense fallback={null}>
+        <HeroBackground />
+      </Suspense>
+      <div className="grain" />
       <Header />
-      <div className="px-4">
-        <main className="pt-16 md:pt-24 scroll-m-20 w-full mx-auto container lg:max-w-4xl md:max-w-2xl">
-          <Presentation />
-          <div className="mb-12">
+      <StatusBar />
+      <ScrollRail />
+      <main className="relative px-4">
+        <section id="hero" className="relative min-h-[92dvh]">
+          <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-24 md:pt-36">
+            <Presentation start={introDone} />
+          </div>
+        </section>
+
+        <div className="mx-auto w-full max-w-5xl">
+          <div className="my-16 md:my-24">
             <BrandsCarousel />
           </div>
           <Experiences />
           <Projects />
           <About />
           <Footer />
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

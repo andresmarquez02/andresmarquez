@@ -6,7 +6,7 @@ export default function ItemNav({ item }) {
   return (
     <a
       href={item.url}
-      className="hover:bg-white/10 hover:text-yellow-500 p-1 rounded-full px-2 sm:px-3 transition ease-in text-sm sm:text-base capitalize ms-2"
+      className="rounded-full px-3 py-2 text-sm capitalize text-fg/70 transition hover:bg-fg/10 hover:text-fg"
     >
       {t(item.label)}
     </a>

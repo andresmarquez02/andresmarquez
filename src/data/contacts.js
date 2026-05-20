@@ -5,6 +5,11 @@ export const CONTACTS = [
     name: "contact_me",
   },
   {
+    icon: "lab la-github",
+    url: "https://github.com/andresmarquez02/",
+    name: "Github",
+  },
+  {
     icon: "lab la-linkedin-in",
     url: "https://www.linkedin.com/in/andres-marquez-02/",
     name: "Linkedin",

@@ -36,6 +36,10 @@
   "title_exp4": "Fullstack Developer · Multiparadise (Venezuela - Híbrido)",
   "description_exp4": "Colaboré con el equipo de UX/UI para mejorar el diseño de interfaces, incrementando el rendimiento de la aplicación en un 85%. Depuré y resolví múltiples problemas de lógica del sistema garantizando una aplicación estable. Refactoricé el 75% del código base mejorando significativamente el tiempo de respuesta y desarrollé módulos de administración y funcionalidades personalizadas.",
 
+  "date_exp5": "Noviembre 2025 - Mayo 2026",
+  "title_exp5": "Fullstack Developer & Automation Engineer · Distribuiciones Marver (España - Remoto)",
+  "description_exp5": "Diseñé y construí un sistema ERP personalizado para gestionar inventario, ventas, compras y finanzas. Automatizé procesos manuales internos para mejorar el rendimiento operativo. Integré el sistema con la plataforma de e-commerce de la empresa para sincronizar datos de inventario y ventas, mejorando la eficiencia y reduciendo errores.",
+
   "title_projects": "Proyectos",
   "description_project1": "Sitio web corporativo para concesionario automotriz construido con Laravel, Vue.js y Tailwind CSS.",
   "description_project2": "Tienda en línea con servicio de entrega a domicilio, simulación de catálogo con la API de Pexels y carrito en LocalStorage.",

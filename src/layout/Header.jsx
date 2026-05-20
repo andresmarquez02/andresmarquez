@@ -7,8 +7,6 @@ import SetLang from "./SetLang";
 import ToggleTheme from "./ToggleTheme";
 
 const SCROLL_THRESHOLD = 10;
-const SCROLLED_NAV_CLASS =
-  "md:shadow md:dark:shadow-gray-700 bg-neutral-200/70 dark:bg-black/50 backdrop-blur-xl";
 
 const NAV_ITEMS = [
   { url: "#experience", label: "experience", icon: "las la-laptop" },
@@ -40,21 +38,32 @@ export default function Header() {
   const closeSidebar = () => setIsSidebarOpen(false);
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
-  const navClass = isScrolled || isSidebarOpen ? SCROLLED_NAV_CLASS : "";
-
   return (
     <>
-      <header className="h-16 md:h-20 md:flex justify-center items-center mx-auto md:pt-6 sticky top-0 w-full z-20">
+      <header className="sticky top-0 z-30 mx-auto flex h-16 w-full items-center justify-center px-4 md:h-20 md:pt-4">
         <nav
           aria-label="Main"
-          className={`${navClass} w-full md:w-3/4 lg:w-8/12 xl:w-6/12 h-full md:rounded-full md:px-6 px-3 py-1 md:my-2 transition-all duration-150 ease-in`}
+          className={`relative flex h-12 w-full items-center justify-between rounded-full border px-3 transition-all duration-300 md:w-auto md:gap-1 md:px-2 ${
+            isScrolled || isSidebarOpen
+              ? "border-fg/10 bg-surface/70 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+              : "border-transparent bg-transparent"
+          }`}
         >
-          <ul className="hidden md:flex h-full flex-wrap flex-row items-center justify-center">
+          <a
+            href="#hero"
+            aria-label="Home"
+            className="ml-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-fg/80 hover:text-fg"
+          >
+            <span className="size-2 rounded-full bg-accent shadow-[0_0_8px_rgba(252,211,77,0.8)]" />
+            AM
+          </a>
+          <ul className="hidden items-center md:flex">
             {NAV_ITEMS.map((item) => (
               <li key={item.url}>
                 <ItemNav item={item} />
               </li>
             ))}
+            <li className="mx-2 h-5 w-px bg-fg/10" />
             <li>
               <ToggleTheme />
             </li>
@@ -62,36 +71,34 @@ export default function Header() {
               <SetLang />
             </li>
           </ul>
-          <div className="md:hidden h-full flex flex-row items-center justify-end">
-            <button
-              type="button"
-              onClick={toggleSidebar}
-              aria-label="Toggle navigation menu"
-              aria-expanded={isSidebarOpen}
-              aria-controls="mobile-sidebar"
-              className="hover:bg-white/10 hover:text-yellow-200 p-1 rounded-full px-2 sm:px-3 transition ease-in text-2xl ms-2"
-            >
-              <i className={isSidebarOpen ? "las la-times" : "las la-bars"} aria-hidden />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isSidebarOpen}
+            aria-controls="mobile-sidebar"
+            className="md:hidden inline-flex size-10 items-center justify-center rounded-full text-xl text-fg/80 transition hover:bg-fg/10 hover:text-fg"
+          >
+            <i className={isSidebarOpen ? "las la-times" : "las la-bars"} aria-hidden />
+          </button>
         </nav>
       </header>
 
       <aside
         id="mobile-sidebar"
-        {...(!isSidebarOpen ? { inert: "" } : {})}
-        className={`md:hidden fixed top-16 right-0 h-[calc(100vh-4rem)] w-full z-10 transition-transform duration-200 ease-out ${
+        inert={!isSidebarOpen}
+        className={`md:hidden fixed top-16 right-0 z-20 h-[calc(100dvh-4rem)] w-full transition-transform duration-300 ease-out ${
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full bg-neutral-200/95 dark:bg-black/80 backdrop-blur-xl px-4 py-6 overflow-y-auto">
+        <div className="h-full overflow-y-auto bg-surface/95 px-4 py-6 backdrop-blur-xl">
           <ul className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => (
               <SidebarItem key={item.url} item={item} onNavigate={closeSidebar} />
             ))}
-            <li className="flex items-center gap-3 px-3 py-3">
+            <li className="mt-4 flex items-center gap-3 px-3 py-3">
               <ToggleTheme />
-              <span>{t("change_theme")}</span>
+              <span className="text-sm text-fg/80">{t("change_theme")}</span>
             </li>
           </ul>
           <SidebarLang />
