@@ -9,7 +9,6 @@ gsap.registerPlugin(ScrollTrigger);
 const EXPERIENCES = [
   { id: "exp5", date: "date_exp5", title: "title_exp5", description: "description_exp5" },
   { id: "exp0", date: "date_exp0", title: "title_exp0", description: "description_exp0" },
-  { id: "exp0", date: "date_exp0", title: "title_exp0", description: "description_exp0" },
   { id: "exp1", date: "date_exp1", title: "title_exp1", description: "description_exp1" },
   { id: "exp2", date: "date_exp2", title: "title_exp2", description: "description_exp2" },
   { id: "exp3", date: "date_exp3", title: "title_exp3", description: "description_exp3" },
