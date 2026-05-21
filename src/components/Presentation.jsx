@@ -78,7 +78,7 @@ export default function Presentation({ start = false }) {
     <section ref={rootRef} className="pb-16 md:pb-24">
       <div className="grid items-end gap-6 md:grid-cols-[auto_1fr]">
         <div data-anim="avatar" className="relative">
-          <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-flag-yellow via-flag-blue to-flag-red opacity-60 blur-md" />
+          <div className="absolute -inset-1 hidden rounded-full bg-gradient-to-br from-flag-yellow via-flag-blue to-flag-red opacity-60 blur-md md:block" />
           <img
             src={profileImage}
             alt="Andres Marquez"

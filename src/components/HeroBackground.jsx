@@ -24,6 +24,7 @@ const FRAGMENT_SHADER = `
   uniform vec3 uColorB;
   uniform vec3 uColorR;
   uniform float uIntensity;
+  uniform float uAspect;
 
   vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
   vec2 mod289(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -82,11 +83,23 @@ const FRAGMENT_SHADER = `
     float bB = band(y, 0.50, 0.17, feather);
     float bR = band(y, 0.17, 0.17, feather);
 
-    // Corner localization: flag only renders in the top-right area and
-    // fades to nothing toward the center/left. Radial mask + noise dissolve
-    // give it a "drifting fabric" feel instead of a literal flag.
-    vec2 cornerAnchor = vec2(0.92, 0.28);
-    float radial = smoothstep(0.65, 0.10, distance(uv, cornerAnchor));
+    // Corner localization. Desktop keeps the original generous radial blob
+    // anchored near the top-right. Portrait/mobile switches to a thin vertical
+    // strip pinned to the right edge: it still covers all three bands (so the
+    // Venezuela flag identity reads) but never bleeds left into the avatar.
+    float narrow = 1.0 - smoothstep(0.6, 1.0, uAspect);
+
+    vec2 dAnchor = vec2(0.92, 0.28);
+    float dRadial = smoothstep(0.65, 0.10, distance(uv, dAnchor));
+
+    // Anchor pushed slightly outside the right edge so the strip's peak
+    // intensity sits at the visible edge instead of falling off there.
+    vec2 mAnchor = vec2(1, 0.5);
+    vec2 md = uv - mAnchor;
+    md.x *= 1.6;
+    float mRadial = smoothstep(0.65, 0.0, length(md));
+
+    float radial = mix(dRadial, mRadial, narrow);
     float dissolve = 0.55 + 0.45 * snoise(uv * 2.4 + vec2(t * 0.08, -t * 0.05));
     float cornerMask = radial * dissolve;
 
@@ -137,8 +150,13 @@ export default function HeroBackground() {
 
     // Dark mode: flag bands stay barely-there so black dominates (recruiter-safe).
     // Light mode: full intensity so the tint actually reads against white bg.
-    const readIntensity = () =>
-      document.documentElement.classList.contains("dark") ? 0.55 : 1.0;
+    // Mobile: bump dark-mode intensity so the now-smaller corner mask still reads.
+    const readIntensity = () => {
+      const dark = document.documentElement.classList.contains("dark");
+      const narrow = window.innerWidth < 768;
+      if (!dark) return 1.0;
+      return narrow ? 1.15 : 0.55;
+    };
 
     const renderer = new THREE.WebGLRenderer({
       antialias: false,
@@ -169,6 +187,9 @@ export default function HeroBackground() {
       uColorB: { value: new THREE.Color("#1D4ED8") },
       uColorR: { value: new THREE.Color("#B91C1C") },
       uIntensity: { value: readIntensity() },
+      uAspect: {
+        value: container.clientWidth / Math.max(container.clientHeight, 1),
+      },
     };
 
     const material = new THREE.ShaderMaterial({
@@ -203,6 +224,8 @@ export default function HeroBackground() {
       const h = container.clientHeight;
       renderer.setSize(w, h);
       uniforms.uResolution.value.set(w, h);
+      uniforms.uAspect.value = w / Math.max(h, 1);
+      uniforms.uIntensity.value = readIntensity();
     };
     window.addEventListener("resize", handleResize);
 
