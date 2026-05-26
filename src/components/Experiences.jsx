@@ -66,16 +66,17 @@ export default function Experiences() {
       data-section="experience"
       className="scroll-mt-24 pb-28"
     >
-      <div className="mb-12 flex items-end justify-between">
+      <div className="mb-12 flex items-end justify-between gap-6">
         <h2
           data-section-title
           className="font-display text-3xl font-semibold tracking-tight text-fg md:text-5xl"
         >
           {t("title_exp")}
         </h2>
-        <span className="hidden font-mono text-xs uppercase tracking-widest text-fg/40 md:block">
-          (01) WORK
-        </span>
+        <span
+          aria-hidden
+          className="hidden h-px flex-1 max-w-[40%] translate-y-[-0.55em] bg-gradient-to-r from-fg/15 to-transparent md:block"
+        />
       </div>
       <ol className="relative ms-3">
         <span

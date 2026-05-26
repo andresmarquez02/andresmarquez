@@ -55,9 +55,10 @@ export default function About() {
       <div className="grid gap-10 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
           <div className="md:sticky md:top-28">
-            <span className="mb-4 hidden font-mono text-xs uppercase tracking-widest text-fg/40 md:block">
-              (03) ABOUT
-            </span>
+            <span
+              aria-hidden
+              className="mb-5 hidden h-px w-12 bg-accent md:block"
+            />
             <h2
               data-section-title
               className="font-display text-3xl font-semibold tracking-tight text-fg md:text-5xl"

@@ -92,14 +92,14 @@ export default function Presentation({ start = false }) {
 
         <div className="flex flex-col gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/70">
           <span data-anim="meta" className="flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
-            <span className="text-emerald-300">{t("availability")}</span>
+            <span className="size-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)]" />
+            <span className="text-emerald-600 dark:text-emerald-300">{t("availability")}</span>
           </span>
           <span data-anim="meta" className="text-fg/75">
-            <span className="text-fg/45">(01)</span> FULLSTACK · LARAVEL · VUE · REACT · NEXT
+            Fullstack · Laravel · Vue · React · Next
           </span>
-          <span data-anim="meta" className="text-fg/75">
-            <span className="text-fg/45">(02)</span> BASED IN CARACAS, VE — OPEN TO REMOTE
+          <span data-anim="meta" className="text-fg/65">
+            Caracas, Venezuela · Remote worldwide
           </span>
         </div>
       </div>
@@ -123,12 +123,12 @@ export default function Presentation({ start = false }) {
 
       <p
         data-anim="subtitle"
-        className="mt-8 max-w-3xl text-balance text-base text-fg/80 md:text-lg"
+        className="mt-8 max-w-3xl text-balance text-base text-fg/70 md:text-lg"
       >
         <span className="text-fg">{t("text1")}</span>{" "}
-        <span className="text-accent">{t("text2")}</span>.{" "}
-        <span className="text-blue-300">{t("text3")}</span>.{" "}
-        <span className="text-fg/70">{t("text4")}</span>
+        <span className="text-fg">{t("text2")}</span>
+        <span className="text-accent">.</span>{" "}
+        {t("text3")}. <span className="text-fg/70">{t("text4")}</span>
       </p>
 
       <div className="mt-10 flex flex-wrap items-center gap-3">

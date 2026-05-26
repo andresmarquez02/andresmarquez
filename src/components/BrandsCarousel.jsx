@@ -15,11 +15,11 @@ export default function BrandsCarousel() {
   const loop = [...BRANDS, ...BRANDS];
 
   return (
-    <div aria-hidden="true">
+    <section aria-label={t("brands_worked")}>
       <p className="mb-6 text-center font-mono text-xs uppercase tracking-widest text-fg/40">
         {t("brands_worked")}
       </p>
-      <div className="fade-mask carousel-container">
+      <div className="fade-mask carousel-container" aria-hidden="true">
         <div className="carousel-track">
           {loop.map((brand, index) => (
             <div
@@ -28,7 +28,7 @@ export default function BrandsCarousel() {
             >
               <img
                 src={brand.logo}
-                alt={brand.name}
+                alt=""
                 loading="lazy"
                 decoding="async"
                 width="160"
@@ -39,6 +39,6 @@ export default function BrandsCarousel() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
