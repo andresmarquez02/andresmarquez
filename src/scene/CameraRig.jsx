@@ -1,12 +1,13 @@
 import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 import { journey } from "./journey";
-import { cruiseFlow, flybys, fovFor, nextHeading, normalizeSpeed } from "./flight";
-import { routePosition, SECTION_IDS } from "./math";
+import { cruiseFlow, flybys, fovFor, heroWeightAt, LOOP_RATE, loopGoal, morphAt, nextHeading, normalizeSpeed } from "./flight";
+import { routePosition, SECTION_IDS, smoothstep } from "./math";
 import { PLANETS } from "./planetData";
 import { CAMERA_OFFSET, frameShift, ROUTE } from "./route";
 
+const X_AXIS = new Vector3(1, 0, 0);
 const Y_AXIS = new Vector3(0, 1, 0);
 
 // Frame-rate independent smoothing factor.
@@ -23,7 +24,8 @@ export default function CameraRig() {
   const look = useMemo(() => new Vector3(), []);
   const target = useMemo(() => new Vector3(), []);
   const offset = useMemo(() => new Vector3(), []);
-  const state = useMemo(() => ({ ready: false, speed: 0, u: 0, pointerX: 0, pointerY: 0 }), []);
+  const loopTurn = useMemo(() => new Quaternion(), []);
+  const state = useMemo(() => ({ ready: false, speed: 0, u: 0, loop: 0, pointerX: 0, pointerY: 0 }), []);
 
   useEffect(() => {
     const onMove = (e) => {
@@ -59,15 +61,24 @@ export default function CameraRig() {
 
     const glance = flybys(focus.z, PLANETS);
 
-    goal.copy(focus).add(offset.copy(CAMERA_OFFSET).applyAxisAngle(Y_AXIS, -glance.yaw));
+    // Half-loop for the trip back (see loopGoal); the ship reads journey.loop too.
+    const loopTarget = loopGoal(journey.heading, heroWeightAt(r), morphAt(journey.section.contact));
+    state.loop += (loopTarget - state.loop) * damp(LOOP_RATE, delta);
+    journey.loop = Math.PI * smoothstep(0, 1, state.loop);
+    loopTurn.setFromAxisAngle(X_AXIS, journey.loop);
+
+    offset.copy(CAMERA_OFFSET);
+    offset.z += journey.flow * 2.5;
+    offset.applyAxisAngle(Y_AXIS, -glance.yaw).applyQuaternion(loopTurn);
+    goal.copy(focus).add(offset);
     goal.x += state.pointerX * 0.8;
     goal.y += state.pointerY * 0.5 - glance.look * 0.3;
-    goal.z += journey.flow * 2.5;
     camera.position.lerp(goal, damp(4, delta));
 
     target.copy(focus);
     target.y += glance.look;
     look.lerp(target, damp(4, delta));
+    camera.up.copy(Y_AXIS).applyQuaternion(loopTurn);
     camera.lookAt(look);
     camera.rotateZ(-glance.bank * 0.1);
 

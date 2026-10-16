@@ -6,7 +6,7 @@ import {
 } from "../src/scene/math.js";
 import {
   bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, streakRate, plumeLength,
-  cruiseFlow, CRUISE_FLOW, ASCENT_HEADING, LAUNCH_HEADING, ignition,
+  cruiseFlow, CRUISE_FLOW, ASCENT_HEADING, ignition, loopGoal, heroWeightAt, morphAt,
 } from "../src/scene/flight.js";
 import { PLANETS } from "../src/scene/planetData.js";
 import { cruiseOffset, frameShift } from "../src/scene/route.js";
@@ -174,13 +174,18 @@ test("lift-off burst: fast attack, slow fade, nothing before ignition", () => {
   assert.ok(ignition(1) < ignition(0.5) && ignition(3.5) < 0.05, "fades out within ~3 s");
 });
 
-test("hero and lift-off poses point the nose up, never at the reader", () => {
-  for (const [x, y, z] of [ASCENT_HEADING, LAUNCH_HEADING]) {
-    assert.ok(y > 0, "nose always points up");
-    assert.ok(Math.abs(z) < 0.5, "never pointing at or away from the camera");
-    assert.ok(x >= 0, "and never toward the text on the left");
-  }
-  assert.ok(LAUNCH_HEADING[1] > ASCENT_HEADING[1], "lift-off is steeper than the climb");
+test("hero launch pose points the nose up and right, never at the reader", () => {
+  const [x, y, z] = ASCENT_HEADING;
+  assert.ok(y > 0 && x > 0, "up and away from the text");
+  assert.ok(Math.abs(z) < 0.5, "never pointing at or away from the camera");
+});
+
+test("return trip: half-loop only while scrolling up, never at the hero or the portrait", () => {
+  assert.equal(loopGoal(1, 0, 0), 0, "flying down: no loop");
+  assert.equal(loopGoal(-1, 0, 0), 1, "flying back mid-route: full half-loop");
+  assert.equal(loopGoal(-1, heroWeightAt(0), 0), 0, "upright at the hero");
+  assert.equal(loopGoal(-1, 0, morphAt(1)), 0, "upright at the portrait");
+  assert.ok(loopGoal(-1, heroWeightAt(0.2), 0) > 0 && loopGoal(-1, heroWeightAt(0.2), 0) < 1, "eases back upright near the hero");
 });
 
 test("rockShape makes lumpy rocks of roughly unit size with unit normals", () => {

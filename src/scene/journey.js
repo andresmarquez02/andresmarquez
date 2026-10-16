@@ -5,5 +5,6 @@ export const journey = {
   speed: 0, // camera speed, 0..1, written by CameraRig and read by the ship, streaks and post FX
   flow: 0, // how fast the flight feels, 0..1 (scroll speed, never below the cruise), written by CameraRig
   heading: 1, // 1 scrolling down, -1 scrolling up, written by CameraRig
+  loop: 0, // radians of the return-trip half-loop (0 forward, PI heading home), written by CameraRig
   ship: null, // the ship's Object3D, set by Ship so the speed lines can follow it
 };

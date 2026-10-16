@@ -56,12 +56,21 @@ export function nextHeading(current, velocity, threshold = HEADING_THRESHOLD) {
 export const SPEED_REFERENCE = 60; // world units per second that count as "full speed"
 export const normalizeSpeed = (unitsPerSecond) => clamp01(unitsPerSecond / SPEED_REFERENCE);
 
-// The ship is always "climbing": its nose points up and to the right (ASCENT
-// while the reader scrolls down) or straight up (LAUNCH while scrolling back
-// up). It never turns around, so it reads as a rocket taking off, not a car
-// turning. Directions in world space, nose first.
+// Hero launch pose: nose up and to the right. World space, nose first.
 export const ASCENT_HEADING = [1, 0.62, 0.3];
-export const LAUNCH_HEADING = [0.3, 1, 0.1];
+
+// How much the hero's launch pose and the contact portrait take over (0..1).
+export const heroWeightAt = (r) => 1 - smoothstep(0, 0.35, r);
+export const morphAt = (contact) => smoothstep(0.1, 0.7, contact);
+
+// Return trip. Scrolling up, the ship and the camera half-loop together over
+// the top (pitch up, 180 degrees about the world X axis), so the ship keeps
+// flying nose first, seen from behind, and the stars keep streaming toward the
+// reader: it reads as heading home, never as reversing. A rotation about X
+// keeps world +x on the right of the screen, so planets stay clear of the
+// text. Never at the hero or the portrait, which face the reader upright.
+export const loopGoal = (heading, heroWeight, morph) => (heading < 0 ? (1 - heroWeight) * (1 - morph) : 0);
+export const LOOP_RATE = 1.6; // per second; the half-loop takes about 1.5 s
 
 // How fast the flight *feels*, 0..1: the real scroll speed, but never below a
 // steady cruise between the launch (hero) and the landing (contact). Engines,

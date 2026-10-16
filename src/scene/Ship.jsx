@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { AdditiveBlending, Matrix4, Quaternion, Vector3 } from "three";
 import { journey } from "./journey";
-import { ASCENT_HEADING, flybys, ignition, LAUNCH_HEADING, plumeLength } from "./flight";
+import { ASCENT_HEADING, flybys, heroWeightAt, ignition, morphAt, plumeLength } from "./flight";
 import { mulberry32, routePosition, sampleLuminance, SECTION_IDS, smoothstep } from "./math";
 import { PLANETS } from "./planetData";
 import { aheadU, cruiseOffset, ROUTE, shipLead, stageOffset, stageScale } from "./route";
@@ -20,14 +20,14 @@ const PORTRAIT_THRESHOLD = 0.3;
 const SHIP_SCALE = 0.95;
 const PORTRAIT_HEIGHT = 9 / SHIP_SCALE; // 9 world units once the ship scale applies
 // Poses, nose first. The hero shows the launch pose (up and to the right).
-// Scrolling down the ship flies along the route, banking through its curves;
-// scrolling back up it rises straight up, like lifting off again, instead of
-// turning around.
+// Along the route the ship flies nose first, banking through its curves; on
+// the way back it half-loops with the camera (journey.loop), so it still flies
+// nose first instead of reversing.
 const UP = new Vector3(0, 1, 0);
 const Z_AXIS = new Vector3(0, 0, 1);
 const poseFrom = (heading, up) =>
   new Quaternion().setFromRotationMatrix(new Matrix4().lookAt(new Vector3(), new Vector3(...heading).normalize(), up));
-const POSE_RATE = 3; // how quickly the ship eases between the two poses (per second)
+const X_AXIS = new Vector3(1, 0, 0);
 const POINT_SIZE = 34; // px at 1 world unit, before device pixel ratio
 
 const hullVertex = /* glsl */ `
@@ -124,13 +124,14 @@ export default function Ship({ hullParticles, plumeParticles }) {
       travel: new Quaternion(),
       kick: new Vector3(),
       ascent: poseFrom(ASCENT_HEADING, UP),
-      launch: poseFrom(LAUNCH_HEADING, Z_AXIS),
+      loopTurn: new Quaternion(),
+      up: new Vector3(),
       identity: new Quaternion(),
       goal: new Quaternion(),
       roll: new Quaternion(),
-      lift: 0, // 0 flying along the route, 1 rising straight up (scrolling back up)
       lastR: 0,
-      ignitedAt: -Infinity, // clock time of the last lift-off from the hero
+      lastMorph: 0,
+      ignitedAt: -Infinity, // clock time of the last lift-off (from the hero or the portrait)
     }),
     []
   );
@@ -174,8 +175,9 @@ export default function Ship({ hullParticles, plumeParticles }) {
     const r = routePosition(journey.section);
     const u = r / (SECTION_IDS.length - 1);
     const uShip = aheadU(u, shipLead(r));
-    const heroWeight = 1 - smoothstep(0, 0.35, r);
-    const morph = smoothstep(0.1, 0.7, journey.section.contact);
+    const heroWeight = heroWeightAt(r);
+    const morph = morphAt(journey.section.contact);
+    tmp.loopTurn.setFromAxisAngle(X_AXIS, journey.loop);
 
     ROUTE.getPoint(uShip, tmp.pos);
     const dodge = flybys(tmp.pos.z, PLANETS);
@@ -193,12 +195,17 @@ export default function Ship({ hullParticles, plumeParticles }) {
     tmp.pos.addScaledVector(stageOffset("hero", aspect, tmp.stage), heroWeight);
     tmp.pos.addScaledVector(stageOffset("contact", aspect, tmp.stage), morph);
     tmp.pos.y += Math.sin(clock.elapsedTime * 1.2) * 0.08;
+    // On the way back the whole rig (camera and ship) is half-looped about the focus.
+    tmp.pos.sub(tmp.focus).applyQuaternion(tmp.loopTurn).add(tmp.focus);
 
     // Lift-off: the first scroll away from the hero fires the engines. The
     // ship lurches forward along its nose with a short shake and a burst of
     // flame, then settles into the cruise.
     if (r > 0.02 && tmp.lastR <= 0.02 && journey.heading > 0) tmp.ignitedAt = clock.elapsedTime;
+    // and leaving the portrait upward: the ship rebuilds and takes off again
+    if (morph < 0.4 && tmp.lastMorph >= 0.4 && journey.heading < 0) tmp.ignitedAt = clock.elapsedTime;
     tmp.lastR = r;
+    tmp.lastMorph = morph;
     const boost = ignition(clock.elapsedTime - tmp.ignitedAt) * (1 - morph);
     tmp.kick.set(0, 0, -1).applyQuaternion(ship.quaternion).multiplyScalar(2.4 * boost);
     tmp.pos.add(tmp.kick);
@@ -206,15 +213,16 @@ export default function Ship({ hullParticles, plumeParticles }) {
     ship.position.lerp(tmp.pos, 1 - Math.exp(-6 * delta));
 
     tmp.roll.setFromAxisAngle(Z_AXIS, dodge.bank * (1 - morph));
-    // Matrix4.lookAt points -Z (the nose) along the route tangent.
-    tmp.m.lookAt(tmp.zero, ROUTE.getTangent(uShip, tmp.tangent), UP);
+    // Matrix4.lookAt points -Z (the nose) along the route tangent. On the way
+    // back (journey.loop = PI) the nose turns to the real backward direction,
+    // -tangent: the half-loop flips y and z, and x is eased across with cos.
+    ROUTE.getTangent(uShip, tmp.tangent);
+    tmp.tangent.x *= Math.cos(journey.loop);
+    tmp.tangent.applyQuaternion(tmp.loopTurn);
+    tmp.m.lookAt(tmp.zero, tmp.tangent, tmp.up.copy(UP).applyQuaternion(tmp.loopTurn));
     tmp.travel.setFromRotationMatrix(tmp.m);
-    // Scrolling up (below the hero) lifts it off vertically instead of reversing.
-    const liftGoal = journey.heading < 0 ? 1 - heroWeight : 0;
-    tmp.lift += (liftGoal - tmp.lift) * (1 - Math.exp(-POSE_RATE * Math.min(delta, 0.1)));
     tmp.goal
       .copy(tmp.travel)
-      .slerp(tmp.launch, smoothstep(0, 1, tmp.lift))
       .slerp(tmp.ascent, heroWeight)
       .slerp(tmp.identity, morph)
       .multiply(tmp.roll);
