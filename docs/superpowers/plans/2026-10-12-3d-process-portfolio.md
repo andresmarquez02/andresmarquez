@@ -3222,9 +3222,10 @@ const hullVertex = /* glsl */ `
     p += 0.03 * (1.0 + 3.0 * m) * vec3(sin(uTime * 2.0 + aSeed * 40.0), cos(uTime * 1.7 + aSeed * 31.0), sin(uTime * 1.3 + aSeed * 17.0));
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = uSize * (0.7 + 0.6 * fract(aSeed * 91.7)) / -mv.z;
+    gl_PointSize = uSize * (0.7 + 0.6 * fract(aSeed * 91.7)) * mix(1.0, 0.7, m) / -mv.z;
     vColor = mix(aColor, vec3(1.0, 0.93, 0.8), m * 0.5);
-    vAlpha = 1.0;
+    // only ~45% of the particles draw the portrait: more saturates the face into a blob
+    vAlpha = mix(1.0, step(aSeed, 0.45), m);
   }
 `;
 
