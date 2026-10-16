@@ -18,15 +18,9 @@
   "contact_me": "Contáctame",
 
   "hero_kicker": "Andrés Márquez · Fullstack & Automation Engineer",
-  "hero_line1": "Diseño.",
-  "hero_line2": "Desarrollo.",
-  "hero_line3": "Automatizo.",
+  "hero_line1": "Software que escala.",
+  "hero_line2": "Procesos que se automatizan.",
   "hero_lead": "Así construyo software: patrones de diseño que lo mantienen simple, arquitectura que escala, desarrollo con IA, pruebas y despliegue. Cada fase con criterio humano y automatizaciones que eliminan el trabajo manual.",
-  "hero_pill1": "Patrones de diseño",
-  "hero_pill2": "Escalabilidad",
-  "hero_pill3": "Desarrollo con IA",
-  "hero_pill4": "Automatización",
-  "hero_pill5": "Pruebas y despliegue",
   "hero_scroll": "Recorre el proceso",
 
   "process_kicker": "01 — Proceso",

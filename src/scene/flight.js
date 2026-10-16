@@ -57,7 +57,7 @@ export const SPEED_REFERENCE = 60; // world units per second that count as "full
 export const normalizeSpeed = (unitsPerSecond) => clamp01(unitsPerSecond / SPEED_REFERENCE);
 
 // Hero launch pose: nose up and to the right. World space, nose first.
-export const ASCENT_HEADING = [1, 0.62, 0.3];
+export const ASCENT_HEADING = [1, 0.68, 0.3];
 
 // How much the hero's launch pose and the contact portrait take over (0..1).
 export const heroWeightAt = (r) => 1 - smoothstep(0, 0.35, r);

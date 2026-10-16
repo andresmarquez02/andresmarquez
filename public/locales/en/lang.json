@@ -18,15 +18,9 @@
   "contact_me": "Contact me",
 
   "hero_kicker": "Andrés Márquez · Fullstack & Automation Engineer",
-  "hero_line1": "I design.",
-  "hero_line2": "I develop.",
-  "hero_line3": "I automate.",
+  "hero_line1": "Software that scales.",
+  "hero_line2": "Work that runs itself.",
   "hero_lead": "This is how I build software: design patterns that keep it simple, architecture that scales, AI-assisted development, testing and deployment. Every phase with human judgment, and automations that remove manual work.",
-  "hero_pill1": "Design patterns",
-  "hero_pill2": "Scalability",
-  "hero_pill3": "AI-assisted development",
-  "hero_pill4": "Automation",
-  "hero_pill5": "Testing & deployment",
   "hero_scroll": "Explore the process",
 
   "process_kicker": "01 — Process",

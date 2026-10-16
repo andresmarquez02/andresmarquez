@@ -227,7 +227,7 @@ export default function Ship({ hullParticles, plumeParticles }) {
       .slerp(tmp.identity, morph)
       .multiply(tmp.roll);
     ship.quaternion.slerp(tmp.goal, 1 - Math.exp(-5 * delta));
-    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 0.92 : 1));
+    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 0.92 + 0.13 * heroWeight : 1));
     journey.ship = ship;
 
     // R3F copies the `uniforms` props into the materials: write to the materials' own.

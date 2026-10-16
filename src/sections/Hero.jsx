@@ -4,8 +4,7 @@ import { gsap } from "gsap";
 import { useJourneySection } from "../hooks/useJourneySection";
 import { WHATSAPP_URL } from "../data/contacts";
 
-const LINES = ["hero_line1", "hero_line2", "hero_line3"];
-const PILLS = [1, 2, 3, 4, 5];
+const LINES = ["hero_line1", "hero_line2"];
 
 export default function Hero() {
   const { t } = useTranslation();
@@ -40,7 +39,7 @@ export default function Hero() {
           </p>
           <h1
             className="mt-8 font-display font-bold leading-[0.92] tracking-[-0.03em]"
-            style={{ fontSize: "clamp(2.75rem, 8vw, 7.25rem)" }}
+            style={{ fontSize: "clamp(2.5rem, 6.2vw, 5.75rem)" }}
           >
             {LINES.map((key, i) => (
               <span key={key} className="block overflow-hidden pb-[0.06em]">
@@ -60,16 +59,6 @@ export default function Hero() {
           <p data-hero-fade className="mt-8 max-w-xl text-pretty text-base text-fg/75 md:text-lg">
             {t("hero_lead")}
           </p>
-          <ul data-hero-fade className="mt-6 flex max-w-xl flex-wrap gap-2">
-            {PILLS.map((n) => (
-              <li
-                key={n}
-                className="rounded-full border border-fg/15 bg-bg/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-fg/70"
-              >
-                {t(`hero_pill${n}`)}
-              </li>
-            ))}
-          </ul>
           <div data-hero-fade className="mt-10 flex flex-wrap items-center gap-6">
             <a
               href={WHATSAPP_URL}

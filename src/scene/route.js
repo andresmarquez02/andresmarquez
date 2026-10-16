@@ -56,7 +56,7 @@ export const frameShift = (aspect) => (aspect >= 1 ? 0.62 : 0);
 
 // Where each station's 3D piece sits relative to its route point: centred on
 // the (shifted) flight line on wide screens, above the text on narrow ones.
-const STAGE_WIDE = { hero: [-1.7, 1.3, 2.5], stack: [1.4, 0.6, 0], contact: [0, 0, 0] };
+const STAGE_WIDE = { hero: [-2.6, 0.8, 4], stack: [1.4, 0.6, 0], contact: [0, 0, 0] };
 const STAGE_NARROW_Y = { hero: 3.8, stack: 1.6, contact: 2.4 };
 
 export function stageOffset(id, aspect, target = new Vector3()) {
