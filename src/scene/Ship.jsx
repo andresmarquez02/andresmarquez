@@ -23,6 +23,10 @@ const PORTRAIT_HEIGHT = 9 / SHIP_SCALE; // 9 world units once the ship scale app
 const HERO_HEADING = new Vector3(1, 0.55, 0.3).normalize();
 const UP = new Vector3(0, 1, 0);
 const Z_AXIS = new Vector3(0, 0, 1);
+// Turning around when the reader scrolls back up: about a second, banked like
+// an aircraft turn, so the ship flies home nose first instead of in reverse.
+const TURN_RATE = 2.4;
+const TURN_BANK = 0.9;
 const POINT_SIZE = 34; // px at 1 world unit, before device pixel ratio
 
 const hullVertex = /* glsl */ `
@@ -103,6 +107,7 @@ export default function Ship({ hullParticles, plumeParticles }) {
   const tmp = useMemo(
     () => ({
       pos: new Vector3(),
+      focus: new Vector3(),
       stage: new Vector3(),
       tangent: new Vector3(),
       zero: new Vector3(),
@@ -112,6 +117,9 @@ export default function Ship({ hullParticles, plumeParticles }) {
       identity: new Quaternion(),
       goal: new Quaternion(),
       roll: new Quaternion(),
+      yaw: new Quaternion(),
+      turnRoll: new Quaternion(),
+      turn: 0, // 0 nose forward, 1 turned around (flying back toward the camera)
     }),
     []
   );
@@ -156,11 +164,19 @@ export default function Ship({ hullParticles, plumeParticles }) {
     const u = r / (SECTION_IDS.length - 1);
     const uShip = aheadU(u, shipLead(r));
     const heroWeight = 1 - smoothstep(0, 0.35, r);
-    const morph = smoothstep(0.15, 0.55, journey.section.contact);
+    const morph = smoothstep(0.1, 0.7, journey.section.contact);
 
     ROUTE.getPoint(uShip, tmp.pos);
     const dodge = flybys(tmp.pos.z, PLANETS);
+    const wide = aspect >= 1;
+    // The route bends ahead of the camera; following it fully would carry the
+    // ship sideways out of its column (and over the text). Keep most of the
+    // sideways motion on the camera's own line of sight.
+    ROUTE.getPoint(u, tmp.focus);
+    tmp.pos.x = tmp.focus.x + (tmp.pos.x - tmp.focus.x) * 0.3;
+    tmp.pos.y = tmp.focus.y + (tmp.pos.y - tmp.focus.y) * 0.3;
     tmp.pos.x += dodge.swerve * (1 - morph);
+    if (wide) tmp.pos.y += dodge.dip * (1 - morph);
     tmp.pos.addScaledVector(cruiseOffset(aspect, tmp.stage), smoothstep(0.2, 1, r) * (1 - morph));
     tmp.pos.addScaledVector(stageOffset("hero", aspect, tmp.stage), heroWeight);
     tmp.pos.addScaledVector(stageOffset("contact", aspect, tmp.stage), morph);
@@ -171,9 +187,16 @@ export default function Ship({ hullParticles, plumeParticles }) {
     tmp.m.lookAt(tmp.zero, ROUTE.getTangent(uShip, tmp.tangent), UP);
     tmp.travel.setFromRotationMatrix(tmp.m);
     tmp.roll.setFromAxisAngle(Z_AXIS, dodge.bank * (1 - morph));
+    const turnGoal = journey.heading < 0 ? 1 : 0;
+    tmp.turn += (turnGoal - tmp.turn) * (1 - Math.exp(-TURN_RATE * Math.min(delta, 0.1)));
+    const turn = smoothstep(0, 1, tmp.turn);
+    tmp.yaw.setFromAxisAngle(UP, Math.PI * turn);
+    tmp.turnRoll.setFromAxisAngle(Z_AXIS, Math.sin(Math.PI * turn) * TURN_BANK);
+    tmp.travel.multiply(tmp.yaw).multiply(tmp.turnRoll);
     tmp.goal.copy(tmp.travel).slerp(tmp.hero, heroWeight).slerp(tmp.identity, morph).multiply(tmp.roll);
     ship.quaternion.slerp(tmp.goal, 1 - Math.exp(-5 * delta));
-    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect));
+    // launch pose a little smaller: nose up and right, it must fit the column
+    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 1 - 0.22 * heroWeight : 1));
 
     // R3F copies the `uniforms` props into the materials: write to the materials' own.
     const live = skin.current.material.uniforms;

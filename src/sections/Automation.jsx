@@ -12,7 +12,7 @@ export default function Automation() {
   return (
     <section ref={ref} id="automation" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="rounded-3xl bg-bg/85 p-6 backdrop-blur-sm md:p-8 lg:max-w-[58%]">
+        <div className="rounded-3xl bg-bg/85 p-6 backdrop-blur-sm md:p-8 lg:max-w-[70%]">
           <SectionHeading kicker={t("ai_kicker")} title={t("ai_title")} lead={t("ai_lead")} />
 
           {/* Four steps that read left to right: spec, context, tools, guardrails. */}

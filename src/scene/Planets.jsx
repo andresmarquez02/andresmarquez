@@ -165,7 +165,7 @@ export default function Planets({ bodyPoints, ringPoints }) {
             <bufferGeometry>
               <bufferAttribute attach="attributes-position" args={[new Float32Array(3), 3]} />
             </bufferGeometry>
-            <pointsMaterial size={planet.radius * 7.2} map={halo} color={KINDS[planet.kind].rim} transparent opacity={0.22} depthWrite={false} blending={AdditiveBlending} />
+            <pointsMaterial size={planet.radius * 5.4} map={halo} color={KINDS[planet.kind].rim} transparent opacity={0.22} depthWrite={false} blending={AdditiveBlending} />
           </points>
           <group ref={(node) => { spins.current[i] = node; }}>
             <points renderOrder={2}>

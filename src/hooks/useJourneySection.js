@@ -10,7 +10,9 @@ gsap.registerPlugin(ScrollTrigger);
 // scene through `journey.section[id]`. Sections are contiguous, so exactly one
 // of them is "in progress" at any time. The hero passes start: "top top": its top
 // is already above the centre line at scroll 0, so the default would begin at 0.5.
-export function useJourneySection(id, onProgress, { start = "top center" } = {}) {
+// Contact, the last section, passes end: "bottom bottom" so it reaches 1 at the
+// very end of the page.
+export function useJourneySection(id, onProgress, { start = "top center", end = "bottom center" } = {}) {
   const ref = useRef(null);
   const callback = useRef(onProgress);
 
@@ -26,12 +28,12 @@ export function useJourneySection(id, onProgress, { start = "top center" } = {})
     const trigger = ScrollTrigger.create({
       trigger: ref.current,
       start,
-      end: "bottom center",
+      end,
       onUpdate: publish,
       onRefresh: publish,
     });
     return () => trigger.kill();
-  }, [id, start]);
+  }, [id, start, end]);
 
   return ref;
 }

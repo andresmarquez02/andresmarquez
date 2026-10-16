@@ -1,7 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 import ScrollRail from "./layout/ScrollRail";
 import StatusBar from "./layout/StatusBar";
@@ -56,11 +55,8 @@ export default function App() {
         <Automation />
         <Stack />
         <Work />
-        <Contact immersive={immersive} />
+        <Contact />
       </main>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4">
-        <Footer />
-      </div>
     </div>
   );
 }

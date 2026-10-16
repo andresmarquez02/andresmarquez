@@ -4,9 +4,9 @@ import {
   SECTION_IDS, routePosition, nearStation, pickTier, mulberry32,
   sampleLuminance, constellationLayout, fibonacciSphere,
 } from "../src/scene/math.js";
-import { bell, flybys, normalizeSpeed, fovFor, streakAlpha, streakLength, plumeLength } from "../src/scene/flight.js";
+import { bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, plumeLength } from "../src/scene/flight.js";
 import { PLANETS } from "../src/scene/planetData.js";
-import { cruiseOffset } from "../src/scene/route.js";
+import { cruiseOffset, frameShift } from "../src/scene/route.js";
 import { ROUTE, STATIONS, SEGMENT_LENGTH, stationU, aheadU, shipLead, zAt, uAtZ } from "../src/scene/route.js";
 
 const sections = (values) => Object.fromEntries(SECTION_IDS.map((id, i) => [id, values[i] ?? 0]));
@@ -96,13 +96,15 @@ test("uAtZ inverts zAt", () => {
 
 test("two planets, clear of the ship's path and of each other", () => {
   assert.equal(PLANETS.length, 2);
-  const ship = cruiseOffset(2).x; // where the ship flies on wide screens
+  const ship = cruiseOffset(2); // where the ship flies on wide screens
   let previous = zAt(0);
   for (const p of PLANETS) {
+    const clearance = Math.hypot(p.dx - ship.x, p.dy - ship.y);
     assert.ok(p.z < previous && p.z > zAt(1), `${p.id} out of order or off the route`);
     assert.ok(p.radius >= 3 && p.radius <= 4.5, `${p.id}: big but under a quarter of the screen`);
-    assert.ok(p.dx - p.radius >= ship + 3, `${p.id} would clip the ship`);
-    if (p.ring) assert.ok(p.dx - p.radius * 1.75 >= ship + 1, `${p.id}'s ring would cross the ship`);
+    assert.ok(Math.abs(p.dy) - p.radius >= 3, `${p.id} would clip the ship`);
+    assert.ok(Math.abs(p.dx) <= 3, `${p.id} must stay in the right-hand column, not drift over the text`);
+    if (p.ring) assert.ok(clearance - p.radius * 1.75 >= 1, `${p.id}'s ring would cross the ship`);
     assert.ok(p.reach >= 20 && p.reach <= 45);
     previous = p.z;
   }
@@ -123,19 +125,33 @@ test("fibonacciSphere spreads unit vectors evenly over the sphere", () => {
   assert.ok(Math.abs(north / 2000 - 0.25) < 0.01, "a quarter of the sphere lies above y = 0.5");
 });
 
-test("flybys: quiet far from planets, banking away from the planet when close", () => {
-  const far = flybys(0, [{ z: -100, dx: 8, reach: 20 }]);
-  assert.deepEqual(far, { bank: 0, swerve: 0, look: 0 });
+test("flybys: quiet far from planets, ducking away from the planet when close", () => {
+  const far = flybys(0, [{ z: -100, dx: 2, dy: 8, reach: 20 }]);
+  assert.deepEqual(far, { bank: 0, swerve: 0, dip: 0, look: 0 });
 
-  const rightPlanet = flybys(-100, [{ z: -100, dx: 8, reach: 20 }]);
-  assert.ok(rightPlanet.bank > 0 && rightPlanet.swerve < 0 && rightPlanet.look > 0);
-  const leftPlanet = flybys(-100, [{ z: -100, dx: -8, reach: 20 }]);
-  assert.ok(leftPlanet.bank < 0 && leftPlanet.swerve > 0 && leftPlanet.look < 0);
-  assert.ok(Math.abs(rightPlanet.bank + leftPlanet.bank) < 1e-12, "mirror image");
+  const above = flybys(-100, [{ z: -100, dx: 2, dy: 8, reach: 20 }]);
+  assert.ok(above.dip < 0 && above.look > 0, "ducks under a planet above and glances up at it");
+  assert.ok(above.bank > 0 && above.swerve < 0, "rolls and nudges away from its side");
+  const below = flybys(-100, [{ z: -100, dx: -2, dy: -8, reach: 20 }]);
+  assert.ok(below.dip > 0 && below.look < 0 && below.bank < 0 && below.swerve > 0);
+  assert.ok(Math.abs(above.dip + below.dip) < 1e-12, "mirror image");
 
-  const crowded = flybys(-100, Array.from({ length: 6 }, () => ({ z: -100, dx: 8, reach: 20 })));
-  assert.ok(crowded.bank <= 0.6 && crowded.swerve >= -2 && crowded.look <= 1.5, "stays bounded");
+  const crowded = flybys(-100, Array.from({ length: 6 }, () => ({ z: -100, dx: 2, dy: 8, reach: 20 })));
+  assert.ok(crowded.bank <= 0.5 && crowded.swerve >= -0.8 && crowded.dip >= -1.5 && crowded.look <= 1, "stays bounded");
   assert.ok(bell(0, 0.1) === 1 && bell(0.1, 0.1) === 0 && bell(0.05, 0.1) === bell(-0.05, 0.1));
+});
+
+test("the ship turns around instead of flying in reverse", () => {
+  assert.equal(nextHeading(1, -10), -1, "scrolling up turns it around");
+  assert.equal(nextHeading(-1, 10), 1, "scrolling down turns it forward again");
+  assert.equal(nextHeading(-1, 0.5), -1, "jitter keeps the heading");
+  assert.equal(nextHeading(1, -0.5), 1);
+  assert.equal(nextHeading(-1, 0), -1, "at rest it keeps facing where it was going");
+});
+
+test("lens shift puts the flight in the right-hand column on wide screens only", () => {
+  assert.ok(frameShift(16 / 9) > 0.5 && frameShift(16 / 9) < 0.7, "flight line at ~80% of the width");
+  assert.equal(frameShift(390 / 844), 0);
 });
 
 test("speed effects are subtle and bounded", () => {

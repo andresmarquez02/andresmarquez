@@ -10,7 +10,7 @@ export default function Stack() {
   return (
     <section ref={ref} id="stack" className="relative py-28 md:py-40">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="rounded-3xl bg-bg/80 p-5 backdrop-blur-sm md:p-6 lg:max-w-[58%]">
+        <div className="rounded-3xl bg-bg/80 p-5 backdrop-blur-sm md:p-6 lg:max-w-[70%]">
           <SectionHeading kicker={t("stack_kicker")} title={t("stack_title")} lead={t("stack_lead")} />
           <dl className="mt-10 space-y-6">
             {STACK_GROUPS.map((group) => (

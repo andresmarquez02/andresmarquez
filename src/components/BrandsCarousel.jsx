@@ -5,7 +5,8 @@ const BRANDS = [
   { name: "GMC", logo: "images/gmc.png" },
   { name: "Land Rover", logo: "images/landrover.png" },
   { name: "Ford", logo: "images/ford.png" },
-  { name: "Leadbox", logo: "images/leadboxLogo.png" },
+  // dark artwork: inverted so it reads on the dark page
+  { name: "Leadbox", logo: "images/leadboxLogo.png", invert: true },
   { name: "Valdusoft", logo: "images/valdusoft.webp" },
   { name: "Vulister", logo: "images/vulister.png" },
 ];
@@ -29,11 +30,10 @@ export default function BrandsCarousel() {
               <img
                 src={brand.logo}
                 alt=""
-                loading="lazy"
                 decoding="async"
                 width="160"
                 height="64"
-                className="h-10 w-auto object-contain opacity-50 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-12"
+                className={`h-10 w-auto object-contain opacity-60 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-12 ${brand.invert ? "invert" : ""}`}
               />
             </div>
           ))}

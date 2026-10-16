@@ -29,62 +29,65 @@ export default function Hero() {
   return (
     <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-20 md:items-center md:pb-0">
       <div className="mx-auto w-full max-w-6xl px-4 pt-28">
-        <p data-hero-fade className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/70">
-          <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-          {t("availability")}
-        </p>
-        <p data-hero-fade className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/50">
-          {t("hero_kicker")}
-        </p>
-        <h1
-          className="mt-8 font-display font-bold leading-[0.92] tracking-[-0.03em]"
-          style={{ fontSize: "clamp(2.75rem, 8vw, 7.25rem)" }}
-        >
-          {LINES.map((key, i) => (
-            <span key={key} className="block overflow-hidden pb-[0.06em]">
-              <span
-                data-hero-line
-                className={`block ${
-                  i === LINES.length - 1
-                    ? "bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent"
-                    : "text-fg"
-                }`}
-              >
-                {t(key)}
+        {/* Text in the left ~65% of the screen; the rocket owns the right-hand column. */}
+        <div className="lg:max-w-[70%]">
+          <p data-hero-fade className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/70">
+            <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            {t("availability")}
+          </p>
+          <p data-hero-fade className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/50">
+            {t("hero_kicker")}
+          </p>
+          <h1
+            className="mt-8 font-display font-bold leading-[0.92] tracking-[-0.03em]"
+            style={{ fontSize: "clamp(2.75rem, 8vw, 7.25rem)" }}
+          >
+            {LINES.map((key, i) => (
+              <span key={key} className="block overflow-hidden pb-[0.06em]">
+                <span
+                  data-hero-line
+                  className={`block ${
+                    i === LINES.length - 1
+                      ? "bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent"
+                      : "text-fg"
+                  }`}
+                >
+                  {t(key)}
+                </span>
               </span>
-            </span>
-          ))}
-        </h1>
-        <p data-hero-fade className="mt-8 max-w-xl text-pretty text-base text-fg/75 md:text-lg">
-          {t("hero_lead")}
-        </p>
-        <ul data-hero-fade className="mt-6 flex max-w-xl flex-wrap gap-2">
-          {PILLS.map((n) => (
-            <li
-              key={n}
-              className="rounded-full border border-fg/15 bg-bg/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-fg/70"
+            ))}
+          </h1>
+          <p data-hero-fade className="mt-8 max-w-xl text-pretty text-base text-fg/75 md:text-lg">
+            {t("hero_lead")}
+          </p>
+          <ul data-hero-fade className="mt-6 flex max-w-xl flex-wrap gap-2">
+            {PILLS.map((n) => (
+              <li
+                key={n}
+                className="rounded-full border border-fg/15 bg-bg/40 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-fg/70"
+              >
+                {t(`hero_pill${n}`)}
+              </li>
+            ))}
+          </ul>
+          <div data-hero-fade className="mt-10 flex flex-wrap items-center gap-6">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-ink-950 transition glow-accent hover:bg-accent-glow"
             >
-              {t(`hero_pill${n}`)}
-            </li>
-          ))}
-        </ul>
-        <div data-hero-fade className="mt-10 flex flex-wrap items-center gap-6">
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-ink-950 transition glow-accent hover:bg-accent-glow"
-          >
-            <i className="lab la-whatsapp text-lg" aria-hidden />
-            {t("contact_me")}
-          </a>
-          <a
-            href="#process"
-            className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-fg/60 transition hover:text-fg"
-          >
-            {t("hero_scroll")}
-            <span aria-hidden>↓</span>
-          </a>
+              <i className="lab la-whatsapp text-lg" aria-hidden />
+              {t("contact_me")}
+            </a>
+            <a
+              href="#process"
+              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-fg/60 transition hover:text-fg"
+            >
+              {t("hero_scroll")}
+              <span aria-hidden>↓</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

@@ -12,7 +12,7 @@ export default function Process() {
   return (
     <section ref={ref} id="process" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="lg:max-w-[58%]">
+        <div className="lg:max-w-[70%]">
           <SectionHeading kicker={t("process_kicker")} title={t("process_title")} lead={t("process_lead")} />
           <ol className="mt-12 grid gap-3 md:grid-cols-2">
           {PROCESS_STEPS.map((n) => (

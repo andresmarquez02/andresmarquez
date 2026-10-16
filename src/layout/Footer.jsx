@@ -6,7 +6,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-12 pb-10">
+    <footer className="mt-6 pb-8">
       <div className="mb-8 h-px bg-gradient-to-r from-transparent via-fg/15 to-transparent" />
       <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
         <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg/45">

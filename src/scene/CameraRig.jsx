@@ -2,10 +2,10 @@ import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { journey } from "./journey";
-import { flybys, fovFor, normalizeSpeed } from "./flight";
+import { flybys, fovFor, nextHeading, normalizeSpeed } from "./flight";
 import { routePosition, SECTION_IDS } from "./math";
 import { PLANETS } from "./planetData";
-import { CAMERA_OFFSET, ROUTE } from "./route";
+import { CAMERA_OFFSET, frameShift, ROUTE } from "./route";
 
 // Frame-rate independent smoothing factor.
 const damp = (rate, delta) => 1 - Math.exp(-rate * delta);
@@ -20,7 +20,7 @@ export default function CameraRig() {
   const goal = useMemo(() => new Vector3(), []);
   const look = useMemo(() => new Vector3(), []);
   const target = useMemo(() => new Vector3(), []);
-  const state = useMemo(() => ({ ready: false, speed: 0, pointerX: 0, pointerY: 0 }), []);
+  const state = useMemo(() => ({ ready: false, speed: 0, u: 0, pointerX: 0, pointerY: 0 }), []);
 
   useEffect(() => {
     const onMove = (e) => {
@@ -41,33 +41,45 @@ export default function CameraRig() {
       previous.copy(focus);
       camera.position.copy(focus).add(CAMERA_OFFSET);
       look.copy(focus);
+      state.u = u;
     }
     if (delta > 0) {
       const perSecond = focus.distanceTo(previous) / delta;
       state.speed += (perSecond - state.speed) * damp(5, delta);
+      journey.heading = nextHeading(journey.heading, Math.sign(u - state.u) * perSecond);
     }
     previous.copy(focus);
+    state.u = u;
     journey.speed = normalizeSpeed(state.speed);
 
     const glance = flybys(focus.z, PLANETS);
 
     goal.copy(focus).add(CAMERA_OFFSET);
-    goal.x += state.pointerX * 0.8 - glance.look * 0.45;
-    goal.y += state.pointerY * 0.5;
+    goal.x += state.pointerX * 0.8;
+    goal.y += state.pointerY * 0.5 - glance.look * 0.3;
     goal.z += journey.speed * 2.5;
     camera.position.lerp(goal, damp(4, delta));
 
     target.copy(focus);
-    target.x += glance.look;
+    target.y += glance.look;
     look.lerp(target, damp(4, delta));
     camera.lookAt(look);
     camera.rotateZ(-glance.bank * 0.1);
 
     const fov = fovFor(journey.speed);
+    let dirty = false;
     if (Math.abs(camera.fov - fov) > 0.01) {
       camera.fov += (fov - camera.fov) * damp(3, delta);
-      camera.updateProjectionMatrix();
+      dirty = true;
     }
+    // Lens shift (see frameShift): film offset that moves the image right by
+    // `shift` NDC, recomputed as the fov and aspect change.
+    const film = -frameShift(camera.aspect) * camera.getFilmWidth() * Math.tan((camera.fov * Math.PI) / 360) * camera.aspect;
+    if (Math.abs(camera.filmOffset - film) > 1e-4) {
+      camera.filmOffset = film;
+      dirty = true;
+    }
+    if (dirty) camera.updateProjectionMatrix();
   });
 
   return null;

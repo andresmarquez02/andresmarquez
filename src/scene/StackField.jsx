@@ -44,7 +44,8 @@ export default function StackField() {
     group.current.visible = Math.abs(routePosition(journey.section) - STACK_MID) < 1.1;
     if (!group.current.visible) return;
     stageOffset("stack", aspect, group.current.position).add(station);
-    group.current.scale.setScalar(stageScale(aspect));
+    // narrower on desktop: it must fit the right-hand column, clear of the text
+    group.current.scale.setScalar(stageScale(aspect) * (aspect >= 1 ? 0.6 : 1));
     group.current.rotation.y = Math.sin(clock.elapsedTime * 0.1) * 0.25;
   });
 

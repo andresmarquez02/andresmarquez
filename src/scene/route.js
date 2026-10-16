@@ -48,9 +48,15 @@ export const shipLead = (r) => 10 * smoothstep(0.1, 0.5, r) * (1 - smoothstep(4.
 // The camera sits behind and slightly above the route point it looks at.
 export const CAMERA_OFFSET = new Vector3(0, 0.6, 14);
 
-// Where each station's 3D piece sits relative to its route point: right of
-// the text on wide screens, above it on narrow ones.
-const STAGE_WIDE = { hero: [4.4, 0.4, 0], stack: [4.6, 0, 0], contact: [4.6, 0, 0] };
+// On wide screens the text takes the left ~65% of the viewport and the 3D
+// lives in the right-hand column. Instead of pushing every object sideways
+// (which drags passing planets across the text), the camera's lens is shifted:
+// the flight line itself is drawn at ~81% of the screen width. NDC units.
+export const frameShift = (aspect) => (aspect >= 1 ? 0.62 : 0);
+
+// Where each station's 3D piece sits relative to its route point: centred on
+// the (shifted) flight line on wide screens, above the text on narrow ones.
+const STAGE_WIDE = { hero: [-0.8, 0.2, 0], stack: [1.4, 0.6, 0], contact: [0, 0, 0] };
 const STAGE_NARROW_Y = { hero: 3.8, stack: 1.6, contact: 2.4 };
 
 export function stageOffset(id, aspect, target = new Vector3()) {
@@ -59,16 +65,16 @@ export function stageOffset(id, aspect, target = new Vector3()) {
 
 export const stageScale = (aspect) => (aspect >= 1 ? 1 : 0.42);
 
-// While cruising the ship flies off to the right of the text column (above it
-// on narrow screens), so the panels never hide it.
+// While cruising the ship flies on the flight line (wide screens: already in
+// the right-hand column thanks to the lens shift; narrow: above the text).
 export function cruiseOffset(aspect, target = new Vector3()) {
-  return aspect >= 1 ? target.set(3.5, 0.4, 0) : target.set(0, 3, 0);
+  return aspect >= 1 ? target.set(0, 0, 0) : target.set(0, 3, 0);
 }
 
-// Planet position relative to the route: to the right of the flight line on
-// wide screens; closer in and higher up on narrow ones, where the text is full width.
+// Planet position relative to the route: above or below the flight line on
+// wide screens; up and to the right on narrow ones, where the text is full width.
 export function planetOffset(planet, aspect, target = new Vector3()) {
   return aspect >= 1
     ? target.set(planet.dx, planet.dy, 0)
-    : target.set(planet.dx * 0.4, planet.dy + 2.6 + planet.radius * 0.5, 0);
+    : target.set(4.4, 3.6 + planet.radius * 0.5, 0);
 }

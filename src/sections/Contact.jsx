@@ -1,17 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { useJourneySection } from "../hooks/useJourneySection";
 import { CONTACTS, WHATSAPP_URL } from "../data/contacts";
+import Footer from "../layout/Footer";
 import SectionHeading from "./SectionHeading";
 
-// Immersive: extra scroll room (sticky panel) while the ship's particles
-// rebuild into the portrait on the right.
-export default function Contact({ immersive }) {
+// The last screen: contact panel plus footer, no extra scrolling. The ship's
+// particles rebuild into the portrait on the right while this screen scrolls in.
+export default function Contact() {
   const { t } = useTranslation();
-  const ref = useJourneySection("contact");
+  const ref = useJourneySection("contact", undefined, { end: "bottom bottom" });
 
   return (
-    <section ref={ref} id="contact" className={`relative ${immersive ? "h-[160vh]" : "py-28"}`}>
-      <div className={`flex items-end pb-12 md:items-center md:pb-0 ${immersive ? "sticky top-0 h-[100dvh]" : ""}`}>
+    <section ref={ref} id="contact" className="relative flex min-h-[100dvh] flex-col">
+      <div className="flex flex-1 items-end pt-24 md:items-center">
         <div className="mx-auto w-full max-w-6xl px-4">
           <div className="max-w-xl rounded-3xl bg-bg/70 p-5 backdrop-blur-sm md:p-6">
             <SectionHeading kicker={t("contact_kicker")} title={t("contact_title")} lead={t("contact_lead")} />
@@ -52,6 +53,9 @@ export default function Contact({ immersive }) {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mx-auto w-full max-w-6xl px-4">
+        <Footer />
       </div>
     </section>
   );
