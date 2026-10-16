@@ -6,6 +6,7 @@ import { journey } from "./journey";
 import { QUALITY } from "./quality";
 import CameraRig from "./CameraRig";
 import Stars from "./Stars";
+import Ship from "./Ship";
 
 const BACKGROUND = "#07070a";
 
@@ -54,6 +55,7 @@ export default function Scene({ tier, onFail }) {
         <color attach="background" args={[BACKGROUND]} />
         <CameraRig />
         <Stars count={quality.stars} />
+        <Ship hullParticles={quality.hullParticles} plumeParticles={quality.plume} />
         {quality.post && <Post />}
       </Canvas>
     </div>
