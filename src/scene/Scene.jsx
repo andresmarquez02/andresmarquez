@@ -11,6 +11,7 @@ import Streaks from "./Streaks";
 import Planets from "./Planets";
 import Ship from "./Ship";
 import StackField from "./StackField";
+import FrameWatch from "./FrameWatch";
 
 const BACKGROUND = "#07070a";
 
@@ -34,7 +35,7 @@ function Post() {
 }
 
 // Fixed, decorative canvas behind the page. All text lives in the DOM.
-export default function Scene({ tier, onFail }) {
+export default function Scene({ tier, onFail, onSlow }) {
   const quality = QUALITY[tier];
   const [visible, setVisible] = useState(() => !document.hidden);
 
@@ -59,6 +60,7 @@ export default function Scene({ tier, onFail }) {
       >
         <color attach="background" args={[BACKGROUND]} />
         <CameraRig />
+        <FrameWatch onSlow={onSlow} />
         <Stars count={quality.stars} />
         <Nebula count={quality.nebula} />
         {quality.streaks > 0 && <Streaks count={quality.streaks} />}

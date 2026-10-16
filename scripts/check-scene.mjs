@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   SECTION_IDS, routePosition, nearStation, pickTier, mulberry32,
-  sampleLuminance, constellationLayout, fibonacciSphere,
+  sampleLuminance, constellationLayout, fibonacciSphere, isTooSlow,
 } from "../src/scene/math.js";
 import { bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, plumeLength } from "../src/scene/flight.js";
 import { PLANETS } from "../src/scene/planetData.js";
@@ -39,6 +39,16 @@ test("pickTier", () => {
   assert.equal(pickTier({ ...base, coarsePointer: true }), "low");
   assert.equal(pickTier({ ...base, cores: 4 }), "low");
   assert.equal(pickTier({ ...base, width: 767 }), "low");
+});
+
+test("isTooSlow judges the median frame, so hitches do not count", () => {
+  const steady60 = Array.from({ length: 120 }, () => 1 / 60);
+  assert.equal(isTooSlow(steady60), false);
+  const phone20 = Array.from({ length: 120 }, () => 1 / 20);
+  assert.equal(isTooSlow(phone20), true);
+  const mostlyFine = [...Array.from({ length: 100 }, () => 1 / 60), ...Array.from({ length: 20 }, () => 0.5)];
+  assert.equal(isTooSlow(mostlyFine), false, "a few long frames are hitches, not a slow device");
+  assert.equal(isTooSlow([]), false, "no samples, no verdict");
 });
 
 test("mulberry32 is deterministic", () => {

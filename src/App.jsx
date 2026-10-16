@@ -38,7 +38,7 @@ export default function App() {
       {immersive ? (
         <SceneBoundary onFail={disableScene}>
           <Suspense fallback={null}>
-            <Scene tier={tier} onFail={disableScene} />
+            <Scene tier={tier} onFail={disableScene} onSlow={disableScene} />
           </Suspense>
         </SceneBoundary>
       ) : (

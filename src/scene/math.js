@@ -32,6 +32,18 @@ export function pickTier({ webgl, reducedMotion, coarsePointer, cores, width }) 
   return "high";
 }
 
+// Below this many frames per second the 3D reads as stutter, not motion.
+export const MIN_FPS = 24;
+
+// Frame times in seconds from a sample window. The median, not the mean, so a
+// few hitches (a tab switch, a GC pause) do not count: only a device that is
+// slow on most frames falls back to the static page.
+export function isTooSlow(deltas, minFps = MIN_FPS) {
+  if (deltas.length === 0) return false;
+  const sorted = [...deltas].sort((a, b) => a - b);
+  return sorted[Math.floor(sorted.length / 2)] > 1 / minFps;
+}
+
 // ---------------------------------------------------------------- random + sampling
 
 // Small seeded PRNG so every visit builds the same scene.
