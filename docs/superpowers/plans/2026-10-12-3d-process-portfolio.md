@@ -3935,10 +3935,11 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Color } from "three";
 import { STACK_GROUPS } from "../data/content";
 import { journey } from "./journey";
-import { constellationLayout, mulberry32, nearStation, routePosition } from "./math";
-import { ROUTE, stageOffset, stageScale, stationU } from "./route";
+import { constellationLayout, mulberry32, routePosition, SECTION_IDS } from "./math";
+import { ROUTE, stageOffset, stageScale } from "./route";
 import { dotTexture } from "./textures";
 
+const STACK_MID = SECTION_IDS.indexOf("stack") + 0.5; // route position halfway through the stack section
 const TINTS = [new Color("#FCD34D"), new Color("#4F8CFF")];
 
 // One small constellation per stack group. Deliberately quiet: the stack is
@@ -3946,7 +3947,10 @@ const TINTS = [new Color("#FCD34D"), new Color("#4F8CFF")];
 export default function StackField() {
   const group = useRef(null);
   const aspect = useThree((s) => s.viewport.aspect);
-  const station = useMemo(() => ROUTE.getPoint(stationU("stack")), []);
+  // The camera flies continuously, so the piece sits where the camera is in the
+  // MIDDLE of the stack section (route position 3.5), not at the station that
+  // marks the section's start.
+  const station = useMemo(() => ROUTE.getPoint(STACK_MID / (SECTION_IDS.length - 1)), []);
   const dot = useMemo(dotTexture, []);
 
   const { positions, colors, lines } = useMemo(() => {
@@ -3969,7 +3973,7 @@ export default function StackField() {
   }, []);
 
   useFrame(({ clock }) => {
-    group.current.visible = nearStation(routePosition(journey.section), "stack");
+    group.current.visible = Math.abs(routePosition(journey.section) - STACK_MID) < 1.1;
     if (!group.current.visible) return;
     stageOffset("stack", aspect, group.current.position).add(station);
     group.current.scale.setScalar(stageScale(aspect));
