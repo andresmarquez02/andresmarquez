@@ -130,17 +130,5 @@
   "photo_alt": "Portrait of Andrés Márquez",
 
   "spanish": "Spanish",
-  "english": "English",
-
-  "_legacy": "keys below are removed in task 5",
-  "experience": "Experience",
-  "projects": "Projects",
-  "about": "About",
-  "text1": "+3 years of experience.",
-  "text2": "Fullstack Developer",
-  "text3": "From Caracas, Venezuela",
-  "text4": "Specialized in Laravel, Vue, React and Next.js",
-  "about_title": "About me",
-  "about_me": "I'm Andrés Márquez, a fullstack developer with 3+ years of experience building modern web applications with Laravel, Vue.js and React. Proactive and self-taught, results-driven and quick to adopt new technologies. Proven track record of performance optimization, load-time reduction and high-quality delivery for clients in North America and Europe. If you're looking for a passionate, reliable and highly effective developer, feel free to reach out.",
-  "change_theme": "Change theme"
+  "english": "English"
 }

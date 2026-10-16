@@ -1,13 +1,16 @@
-import { lazy, Suspense, useState } from "react";
-import About from "./components/About";
-import BrandsCarousel from "./components/BrandsCarousel";
-import Experiences from "./components/Experiences";
-import Presentation from "./components/Presentation";
-import Projects from "./components/Projects";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 import ScrollRail from "./layout/ScrollRail";
 import StatusBar from "./layout/StatusBar";
+import Automation from "./sections/Automation";
+import Contact from "./sections/Contact";
+import Hero from "./sections/Hero";
+import Process from "./sections/Process";
+import Stack from "./sections/Stack";
+import Work from "./sections/Work";
 import SceneBoundary from "./scene/SceneBoundary";
 import { detectTier } from "./scene/quality";
 import { useLenis } from "./hooks/useLenis";
@@ -16,12 +19,19 @@ const Scene = lazy(() => import("./scene/Scene"));
 
 export default function App() {
   useLenis();
+  const { i18n } = useTranslation();
   const [tier, setTier] = useState(detectTier);
+  const immersive = tier !== "off";
   const disableScene = () => setTier("off");
+
+  // Section heights change with the language and the tier; triggers must follow.
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, [i18n.language, tier]);
 
   return (
     <div className="relative text-fg">
-      {tier !== "off" ? (
+      {immersive ? (
         <SceneBoundary onFail={disableScene}>
           <Suspense fallback={null}>
             <Scene tier={tier} onFail={disableScene} />
@@ -30,28 +40,22 @@ export default function App() {
       ) : (
         <div aria-hidden="true" className="scene-fallback" />
       )}
-      {tier !== "off" && <div className="scene-scrim" />}
+      {immersive && <div className="scene-scrim" />}
       <div className="grain" />
       <Header />
       <StatusBar />
       <ScrollRail />
-      <main className="relative z-10 px-4">
-        <section id="hero" className="relative min-h-[92dvh]">
-          <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-24 md:pt-36">
-            <Presentation start />
-          </div>
-        </section>
-
-        <div className="mx-auto w-full max-w-5xl">
-          <div className="my-16 md:my-24">
-            <BrandsCarousel />
-          </div>
-          <Experiences />
-          <Projects />
-          <About />
-          <Footer />
-        </div>
+      <main className="relative z-10">
+        <Hero />
+        <Process />
+        <Automation />
+        <Stack />
+        <Work />
+        <Contact immersive={immersive} />
       </main>
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4">
+        <Footer />
+      </div>
     </div>
   );
 }

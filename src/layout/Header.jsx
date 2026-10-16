@@ -7,10 +7,10 @@ import SetLang from "./SetLang";
 const SCROLL_THRESHOLD = 10;
 
 const NAV_ITEMS = [
-  { url: "#experience", label: "experience", icon: "las la-laptop" },
-  { url: "#projects", label: "projects", icon: "las la-project-diagram" },
-  { url: "#about", label: "about", icon: "las la-user" },
-  { url: "mailto:andres03marquez@gmail.com", label: "contact", icon: "lar la-envelope" },
+  { url: "#process", label: "nav_process", icon: "las la-cogs" },
+  { url: "#automation", label: "nav_ai", icon: "las la-robot" },
+  { url: "#work", label: "nav_work", icon: "las la-laptop" },
+  { url: "#contact", label: "contact", icon: "lar la-envelope" },
 ];
 
 export default function Header() {

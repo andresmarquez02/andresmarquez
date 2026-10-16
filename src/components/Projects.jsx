@@ -16,6 +16,21 @@ const PROJECTS = [
     categories: ["Website", "Vehicles"],
     featured: true,
   },
+  // Private systems: no public URL, so they link to their case in the automation section.
+  {
+    id: "qsm-triple-s",
+    title: "QSM · Triple-S",
+    year: "2026",
+    urlProject: "#case-qsm",
+    categories: ["Automation", "n8n"],
+  },
+  {
+    id: "mcontigo",
+    title: "MContigo · Amazon ES/IT",
+    year: "2026",
+    urlProject: "#case-mcontigo",
+    categories: ["Data", "Python"],
+  },
   {
     id: "iag-group",
     title: "IAG Group",
@@ -23,15 +38,6 @@ const PROJECTS = [
     urlProject: "https://iagcanada.com/",
     image: "images/iag-group.png",
     categories: ["Website", "Vehicles"],
-    featured: true,
-  },
-  {
-    id: "drive-iag",
-    title: "Drive IAG",
-    year: "2024",
-    urlProject: "https://driveiag.com/",
-    image: "images/drive-iag.png",
-    categories: ["Website", "Software"],
     featured: true,
   },
   {
@@ -58,15 +64,6 @@ const PROJECTS = [
     urlProject: "https://dropanas.com/",
     image: "images/dropanas.png",
     categories: ["Website", "E-commerce"],
-  },
-  {
-    id: "expresso",
-    title: "Expresso",
-    year: "2023",
-    urlProject: "https://expressomarket.netlify.app/",
-    urlCode: "https://github.com/andresmarquez02/expresso",
-    image: "images/expresso.png",
-    categories: ["Website", "Services"],
   },
   {
     id: "vulister",

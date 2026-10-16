@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 const SECTIONS = [
   { id: "hero", label: "Intro" },
-  { id: "experience", label: "Work" },
-  { id: "projects", label: "Projects" },
-  { id: "about", label: "About" },
+  { id: "process", label: "Process" },
+  { id: "automation", label: "AI" },
+  { id: "stack", label: "Stack" },
+  { id: "work", label: "Work" },
+  { id: "contact", label: "Contact" },
 ];
 
 export default function StatusBar() {
@@ -25,15 +27,13 @@ export default function StatusBar() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) {
-          const match = SECTIONS.find((s) => s.id === visible.target.id);
-          if (match) setSection(match.label);
-        }
+        const current = entries.find((e) => e.isIntersecting);
+        const match = current && SECTIONS.find((s) => s.id === current.target.id);
+        if (match) setSection(match.label);
       },
-      { threshold: [0.25, 0.5, 0.75] }
+      // A zero-height band at mid-screen: works for sections taller than the
+      // viewport (process is 600vh), where a ratio threshold never fires.
+      { rootMargin: "-50% 0px -50% 0px" }
     );
     SECTIONS.forEach(({ id }) => {
       const el = document.getElementById(id);
