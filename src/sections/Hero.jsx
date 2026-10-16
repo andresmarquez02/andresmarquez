@@ -26,7 +26,7 @@ export default function Hero() {
   }, [ref]);
 
   return (
-    <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-20 md:items-start md:pb-16">
+    <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-12 md:min-h-[84dvh] md:items-start md:pb-6">
       <div className="mx-auto w-full max-w-6xl px-4 pt-28 md:pt-8">
         {/* Text in the left ~65% of the screen; the rocket owns the right-hand column. */}
         <div className="lg:max-w-[70%]">

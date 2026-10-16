@@ -12,7 +12,7 @@ export default function Work() {
     <section ref={ref} id="work" className="relative py-12 md:py-14">
       <div className="mx-auto max-w-6xl px-4">
         <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">{t("work_kicker")}</p>
-        <div className="mt-6 rounded-3xl bg-bg/95 p-6 backdrop-blur-md md:p-10 lg:max-w-[70%]">
+        <div className="panel mt-6 p-6 md:p-10 lg:max-w-[70%]">
           <BrandsCarousel />
           <div className="mt-12">
             <Experiences />

@@ -3,11 +3,17 @@
 
 export const PROCESS_STEPS = [1, 2, 3, 4, 5, 6];
 
-export const AI_PILLARS = [
-  { n: 1, icon: "las la-file-alt" },
-  { n: 2, icon: "las la-brain" },
-  { n: 3, icon: "las la-plug" },
-  { n: 4, icon: "las la-shield-alt" },
+// The agent session shown in the AI section: real commands and conventions.
+export const AI_SESSION = [
+  { cmd: "brainstorm · spec · plan", note: "term_spec" },
+  { cmd: "/migrate-module", note: "term_skill" },
+  { cmd: "/audit", note: "term_audit" },
+  { cmd: "/verify", note: "term_verify" },
+];
+export const AI_CONTEXT = [
+  { label: "ctx", text: "term_ctx" },
+  { label: "mcp", text: "term_mcp" },
+  { label: "rules", text: "term_rules" },
 ];
 
 export const CASES = [

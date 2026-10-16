@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useJourneySection } from "../hooks/useJourneySection";
-import { AI_PILLARS, CASES } from "../data/content";
+import { CASES } from "../data/content";
+import AgentSession from "./AgentSession";
 import SectionHeading from "./SectionHeading";
 
 const CASE_PARTS = ["problem", "solution", "result"];
@@ -12,28 +13,17 @@ export default function Automation() {
   return (
     <section ref={ref} id="automation" className="relative py-12 md:py-14">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="rounded-3xl bg-bg/85 p-6 backdrop-blur-sm md:p-8 lg:max-w-[70%]">
+        <div className="panel p-6 md:p-8 lg:max-w-[70%]">
           <SectionHeading kicker={t("ai_kicker")} title={t("ai_title")} lead={t("ai_lead")} />
 
-          {/* Four steps that read left to right: spec, context, tools, guardrails. */}
-          <ol className="mt-10 grid gap-3 sm:grid-cols-2">
-            {AI_PILLARS.map(({ n, icon }) => (
-              <li key={n} className="relative rounded-2xl border border-fg/10 bg-surface/90 p-5">
-                <span className="relative flex size-12 items-center justify-center rounded-full border border-accent/40 bg-bg text-2xl text-accent">
-                  <i className={icon} aria-hidden />
-                </span>
-                <h3 className="mt-4 font-display text-lg font-semibold text-fg">{t(`ai_pillar${n}_title`)}</h3>
-                <p className="mt-1 text-sm text-fg/70">{t(`ai_pillar${n}_desc`)}</p>
-              </li>
-            ))}
-          </ol>
+          <AgentSession />
           <p className="mt-5 text-sm text-fg/60">{t("ai_in_product")}</p>
 
           <h3 className="mt-20 font-display text-3xl font-semibold tracking-tight text-fg md:text-4xl">{t("cases_title")}</h3>
           <p className="mt-3 max-w-2xl text-fg/70">{t("cases_lead")}</p>
           <ol className="mt-8 space-y-4">
             {CASES.map((c) => (
-              <li key={c.id} id={`case-${c.id}`} className="scroll-mt-28 rounded-2xl border border-fg/10 bg-surface/90 p-5 md:p-6">
+              <li key={c.id} id={`case-${c.id}`} className="scroll-mt-28 rounded-2xl border border-fg/10 bg-bg/40 p-5 md:p-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <h4 className="font-display text-xl font-semibold text-fg md:text-2xl">{t(`case_${c.id}_title`)}</h4>
                   <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">{c.client}</p>

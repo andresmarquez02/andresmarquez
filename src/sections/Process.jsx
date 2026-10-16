@@ -10,7 +10,7 @@ export default function Process() {
   const ref = useJourneySection("process");
 
   return (
-    <section ref={ref} id="process" className="relative py-12 md:py-14">
+    <section ref={ref} id="process" className="relative pb-12 pt-8 md:pb-14 md:pt-6">
       <div className="mx-auto max-w-6xl px-4">
         <div className="lg:max-w-[70%]">
           <SectionHeading kicker={t("process_kicker")} title={t("process_title")} lead={t("process_lead")} />
