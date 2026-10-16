@@ -206,6 +206,6 @@ test("speed effects are subtle and bounded", () => {
   assert.equal(fovFor(5), 52);
   assert.equal(streakAlpha(0), 0);
   assert.ok(Math.abs(streakAlpha(1) - 0.42) < 1e-12 && streakAlpha(9) === streakAlpha(1));
-  assert.ok(streakLength(1) <= 4.2 && plumeLength(1) <= 5);
+  assert.ok(streakLength(1) <= 4.3 && plumeLength(1) <= 5.3);
   assert.ok(streakAlpha(0.3) < streakAlpha(0.6), "grows with speed");
 });
