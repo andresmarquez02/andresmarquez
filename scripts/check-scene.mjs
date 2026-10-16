@@ -2,9 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   SECTION_IDS, routePosition, nearStation, pickTier, mulberry32,
-  sampleLuminance, constellationLayout, fibonacciSphere, isTooSlow,
+  sampleLuminance, constellationLayout, fibonacciSphere, isTooSlow, rockShape,
 } from "../src/scene/math.js";
-import { bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, plumeLength } from "../src/scene/flight.js";
+import {
+  bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, streakRate, plumeLength,
+  cruiseFlow, CRUISE_FLOW, ASCENT_HEADING, LAUNCH_HEADING,
+} from "../src/scene/flight.js";
 import { PLANETS } from "../src/scene/planetData.js";
 import { cruiseOffset, frameShift } from "../src/scene/route.js";
 import { ROUTE, STATIONS, SEGMENT_LENGTH, stationU, aheadU, shipLead, zAt, uAtZ } from "../src/scene/route.js";
@@ -151,7 +154,39 @@ test("flybys: quiet far from planets, ducking away from the planet when close", 
   assert.ok(bell(0, 0.1) === 1 && bell(0.1, 0.1) === 0 && bell(0.05, 0.1) === bell(-0.05, 0.1));
 });
 
-test("the ship turns around instead of flying in reverse", () => {
+test("cruise flow: the flight feels fast between launch and landing, even when not scrolling", () => {
+  assert.equal(cruiseFlow(0, 0), 0, "idle at the launch pad");
+  assert.equal(cruiseFlow(0, 5), 0, "engines off at the portrait");
+  assert.ok(Math.abs(cruiseFlow(0, 2.5) - CRUISE_FLOW) < 1e-9, "steady cruise mid-flight");
+  assert.equal(cruiseFlow(1, 2.5), 1, "scrolling fast goes beyond the cruise");
+  assert.ok(cruiseFlow(0, 0.2) > 0 && cruiseFlow(0, 0.2) < CRUISE_FLOW, "ignition ramps up after the hero");
+  assert.ok(streakAlpha(CRUISE_FLOW) > 0.15, "speed lines are visible while cruising");
+  assert.ok(plumeLength(CRUISE_FLOW) > 3, "the flame is long while cruising");
+  assert.ok(streakRate(1) > streakRate(0));
+});
+
+test("poses: the ship climbs, it never faces the reader or turns around", () => {
+  for (const [x, y, z] of [ASCENT_HEADING, LAUNCH_HEADING]) {
+    assert.ok(y > 0, "nose always points up");
+    assert.ok(Math.abs(z) < 0.5, "never pointing at or away from the camera");
+    assert.ok(x >= 0, "and never toward the text on the left");
+  }
+  assert.ok(LAUNCH_HEADING[1] > ASCENT_HEADING[1], "lift-off is steeper than the climb");
+});
+
+test("rockShape makes lumpy rocks of roughly unit size with unit normals", () => {
+  const { position, normal } = rockShape(300, mulberry32(3));
+  assert.equal(position.length, 900);
+  for (let i = 0; i < 300; i++) {
+    const r = Math.hypot(position[i * 3], position[i * 3 + 1], position[i * 3 + 2]);
+    assert.ok(r > 0.4 && r < 1.7, `radius ${r}`);
+    assert.ok(Math.abs(Math.hypot(normal[i * 3], normal[i * 3 + 1], normal[i * 3 + 2]) - 1) < 1e-5);
+  }
+  const radii = Array.from({ length: 300 }, (_, i) => Math.hypot(position[i * 3], position[i * 3 + 1], position[i * 3 + 2]));
+  assert.ok(Math.max(...radii) - Math.min(...radii) > 0.3, "lumpy, not a smooth sphere");
+});
+
+test("heading follows the scroll direction (it picks the pose, the ship never reverses)", () => {
   assert.equal(nextHeading(1, -10), -1, "scrolling up turns it around");
   assert.equal(nextHeading(-1, 10), 1, "scrolling down turns it forward again");
   assert.equal(nextHeading(-1, 0.5), -1, "jitter keeps the heading");
@@ -170,7 +205,7 @@ test("speed effects are subtle and bounded", () => {
   assert.equal(fovFor(0), 45);
   assert.equal(fovFor(5), 52);
   assert.equal(streakAlpha(0), 0);
-  assert.ok(Math.abs(streakAlpha(1) - 0.3) < 1e-12 && streakAlpha(9) === streakAlpha(1));
-  assert.ok(streakLength(1) <= 3.6 && plumeLength(1) <= 3);
-  assert.ok(streakAlpha(0.5) < streakAlpha(0.8), "grows with speed");
+  assert.ok(Math.abs(streakAlpha(1) - 0.42) < 1e-12 && streakAlpha(9) === streakAlpha(1));
+  assert.ok(streakLength(1) <= 4.2 && plumeLength(1) <= 5);
+  assert.ok(streakAlpha(0.3) < streakAlpha(0.6), "grows with speed");
 });

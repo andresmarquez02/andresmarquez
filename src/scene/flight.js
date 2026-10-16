@@ -51,7 +51,25 @@ export function nextHeading(current, velocity, threshold = HEADING_THRESHOLD) {
 export const SPEED_REFERENCE = 60; // world units per second that count as "full speed"
 export const normalizeSpeed = (unitsPerSecond) => clamp01(unitsPerSecond / SPEED_REFERENCE);
 
-export const fovFor = (speed) => 45 + 7 * clamp01(speed);
-export const streakAlpha = (speed) => 0.3 * smoothstep(0.12, 0.9, speed);
-export const streakLength = (speed) => 0.4 + 3.2 * clamp01(speed);
-export const plumeLength = (speed) => 1.4 + 1.6 * clamp01(speed);
+// The ship is always "climbing": its nose points up and to the right (ASCENT
+// while the reader scrolls down) or straight up (LAUNCH while scrolling back
+// up). It never turns around, so it reads as a rocket taking off, not a car
+// turning. Directions in world space, nose first.
+export const ASCENT_HEADING = [1, 0.55, 0.3];
+export const LAUNCH_HEADING = [0.3, 1, 0.1];
+
+// How fast the flight *feels*, 0..1: the real scroll speed, but never below a
+// steady cruise between the launch (hero) and the landing (contact). Engines,
+// speed lines and lens all follow this, so the ship looks fast the whole way.
+export const CRUISE_FLOW = 0.6;
+export function cruiseFlow(speed, r) {
+  const cruising = CRUISE_FLOW * smoothstep(0.03, 0.4, r) * (1 - smoothstep(4.5, 4.95, r));
+  return Math.max(clamp01(speed), cruising);
+}
+
+export const fovFor = (flow) => 45 + 7 * clamp01(flow);
+export const streakAlpha = (flow) => 0.42 * smoothstep(0.1, 0.7, flow);
+export const streakLength = (flow) => 0.8 + 3.4 * clamp01(flow);
+// World units per second the speed lines slide past the ship.
+export const streakRate = (flow) => 14 + 80 * clamp01(flow);
+export const plumeLength = (flow) => 2 + 3.2 * clamp01(flow);

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { journey } from "./journey";
-import { flybys, fovFor, nextHeading, normalizeSpeed } from "./flight";
+import { cruiseFlow, flybys, fovFor, nextHeading, normalizeSpeed } from "./flight";
 import { routePosition, SECTION_IDS } from "./math";
 import { PLANETS } from "./planetData";
 import { CAMERA_OFFSET, frameShift, ROUTE } from "./route";
@@ -33,7 +33,8 @@ export default function CameraRig() {
 
   useFrame(({ camera }, rawDelta) => {
     const delta = Math.min(rawDelta, 0.1); // a hidden tab must not teleport the camera
-    const u = routePosition(journey.section) / (SECTION_IDS.length - 1);
+    const r = routePosition(journey.section);
+    const u = r / (SECTION_IDS.length - 1);
     ROUTE.getPoint(u, focus);
 
     if (!state.ready) {
@@ -51,13 +52,14 @@ export default function CameraRig() {
     previous.copy(focus);
     state.u = u;
     journey.speed = normalizeSpeed(state.speed);
+    journey.flow = cruiseFlow(journey.speed, r);
 
     const glance = flybys(focus.z, PLANETS);
 
     goal.copy(focus).add(CAMERA_OFFSET);
     goal.x += state.pointerX * 0.8;
     goal.y += state.pointerY * 0.5 - glance.look * 0.3;
-    goal.z += journey.speed * 2.5;
+    goal.z += journey.flow * 2.5;
     camera.position.lerp(goal, damp(4, delta));
 
     target.copy(focus);
@@ -66,7 +68,7 @@ export default function CameraRig() {
     camera.lookAt(look);
     camera.rotateZ(-glance.bank * 0.1);
 
-    const fov = fovFor(journey.speed);
+    const fov = fovFor(journey.flow);
     let dirty = false;
     if (Math.abs(camera.fov - fov) > 0.01) {
       camera.fov += (fov - camera.fov) * damp(3, delta);

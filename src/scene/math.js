@@ -109,6 +109,33 @@ export function constellationLayout(groupSizes, rng) {
   return { stars, segments };
 }
 
+// A rock made of `count` surface points: a lumpy, flattened, slightly angular
+// ellipsoid of radius ~1. Returns positions and outward normals (for shading).
+export function rockShape(count, rng) {
+  const squash = [0.75 + rng() * 0.45, 0.6 + rng() * 0.4, 0.75 + rng() * 0.45];
+  const phase = Array.from({ length: 6 }, () => rng() * Math.PI * 2);
+  const position = new Float32Array(count * 3);
+  const normal = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    // uniform direction on the sphere
+    const y = rng() * 2 - 1;
+    const a = rng() * Math.PI * 2;
+    const ring = Math.sqrt(1 - y * y);
+    const d = [Math.cos(a) * ring, y, Math.sin(a) * ring];
+    // lumps at two scales, plus facets from the quantised third term
+    const bump =
+      0.16 * Math.sin(d[0] * 3.1 + phase[0]) * Math.sin(d[1] * 2.7 + phase[1]) +
+      0.1 * Math.sin(d[2] * 5.3 + phase[2] + d[0] * 2) +
+      (0.06 * Math.round(Math.sin(d[0] * 4 + d[1] * 3 + phase[3]) * 2)) / 2;
+    const r = 1 + bump;
+    position.set([d[0] * r * squash[0], d[1] * r * squash[1], d[2] * r * squash[2]], i * 3);
+    const n = [d[0] / squash[0], d[1] / squash[1], d[2] / squash[2]];
+    const len = Math.hypot(...n);
+    normal.set([n[0] / len, n[1] / len, n[2] / len], i * 3);
+  }
+  return { position, normal };
+}
+
 // `count` unit vectors spread evenly over a sphere (Fibonacci lattice): no
 // poles bunching, no randomness, so a particle planet has even coverage.
 export function fibonacciSphere(count) {

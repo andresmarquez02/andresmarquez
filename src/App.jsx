@@ -45,6 +45,7 @@ export default function App() {
         <div aria-hidden="true" className="scene-fallback" />
       )}
       {immersive && <div className="scene-scrim" />}
+      <div aria-hidden="true" className="sunrays" />
       <div className="grain" />
       <Header />
       <StatusBar />

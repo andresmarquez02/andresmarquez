@@ -3,5 +3,7 @@
 export const journey = {
   section: { hero: 0, process: 0, automation: 0, stack: 0, work: 0, contact: 0 },
   speed: 0, // camera speed, 0..1, written by CameraRig and read by the ship, streaks and post FX
-  heading: 1, // 1 flying forward (scrolling down), -1 flying back (scrolling up), written by CameraRig
+  flow: 0, // how fast the flight feels, 0..1 (scroll speed, never below the cruise), written by CameraRig
+  heading: 1, // 1 scrolling down, -1 scrolling up, written by CameraRig
+  ship: null, // the ship's Object3D, set by Ship so the speed lines can follow it
 };

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { AdditiveBlending, Matrix4, Quaternion, Vector3 } from "three";
 import { journey } from "./journey";
-import { flybys, plumeLength } from "./flight";
+import { ASCENT_HEADING, flybys, LAUNCH_HEADING, plumeLength } from "./flight";
 import { mulberry32, routePosition, sampleLuminance, SECTION_IDS, smoothstep } from "./math";
 import { PLANETS } from "./planetData";
 import { aheadU, cruiseOffset, ROUTE, shipLead, stageOffset, stageScale } from "./route";
@@ -19,14 +19,14 @@ const PORTRAIT_SAMPLE_WIDTH = 160;
 const PORTRAIT_THRESHOLD = 0.3;
 const SHIP_SCALE = 0.95;
 const PORTRAIT_HEIGHT = 9 / SHIP_SCALE; // 9 world units once the ship scale applies
-// Hero pose: nose up and to the right, like a launch. Calibration knob.
-const HERO_HEADING = new Vector3(1, 0.55, 0.3).normalize();
+// Poses, nose first. The ship never turns around: scrolling down it climbs
+// up and to the right (the hero's launch pose, kept all the way), scrolling
+// up it rises straight up, like lifting off again.
 const UP = new Vector3(0, 1, 0);
 const Z_AXIS = new Vector3(0, 0, 1);
-// Turning around when the reader scrolls back up: about a second, banked like
-// an aircraft turn, so the ship flies home nose first instead of in reverse.
-const TURN_RATE = 2.4;
-const TURN_BANK = 0.9;
+const poseFrom = (heading, up) =>
+  new Quaternion().setFromRotationMatrix(new Matrix4().lookAt(new Vector3(), new Vector3(...heading).normalize(), up));
+const POSE_RATE = 3; // how quickly the ship eases between the two poses (per second)
 const POINT_SIZE = 34; // px at 1 world unit, before device pixel ratio
 
 const hullVertex = /* glsl */ `
@@ -57,6 +57,7 @@ const hullVertex = /* glsl */ `
 const plumeVertex = /* glsl */ `
   uniform float uTime;
   uniform float uLen;
+  uniform float uFlow;
   uniform float uAlpha;
   uniform float uSize;
   attribute float aSeed;
@@ -65,15 +66,22 @@ const plumeVertex = /* glsl */ `
   varying float vAlpha;
 
   void main() {
-    float t = fract(aSeed * 7.13 + uTime * 0.9); // 0 at the nozzle, 1 at the tail
+    // the faster the flight, the faster the flame streams out
+    float t = fract(aSeed * 7.13 + uTime * (0.9 + 1.8 * uFlow)); // 0 at the nozzle, 1 at the tail
     float angle = aSeed * 81.7;
-    float spread = (0.05 + t * 0.22) * fract(aSeed * 3.7);
+    float spread = (0.1 + t * (0.3 + 0.22 * uFlow)) * fract(aSeed * 3.7);
     vec3 p = vec3(aNozzle + vec2(cos(angle), sin(angle)) * spread, ${NOZZLE_Z.toFixed(2)} + t * uLen);
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = uSize * (0.5 + 0.8 * fract(aSeed * 5.3)) * (1.0 - 0.5 * t) / -mv.z;
-    vColor = mix(vec3(0.62, 0.78, 1.0), vec3(1.0, 0.6, 0.2), t);
-    vAlpha = (1.0 - t) * (1.0 - t) * 0.5 * uAlpha;
+    gl_PointSize = uSize * (1.3 + 1.5 * fract(aSeed * 5.3)) * (1.0 - 0.5 * t) / -mv.z;
+    // white-hot blue core, then amber, then a deep orange tail
+    vec3 core = vec3(0.78, 0.9, 1.0);
+    vec3 mid = vec3(1.0, 0.72, 0.28);
+    vec3 tail = vec3(1.0, 0.38, 0.1);
+    vColor = mix(mix(core, mid, smoothstep(0.0, 0.35, t)), tail, smoothstep(0.35, 1.0, t));
+    float flicker = 0.8 + 0.2 * sin(uTime * 38.0 + aSeed * 200.0);
+    vColor *= 1.7; // over-bright on purpose: the bloom turns it into fire
+    vAlpha = min(1.0, (1.0 - t) * (0.8 + 0.7 * uFlow) * flicker) * uAlpha;
   }
 `;
 
@@ -103,23 +111,18 @@ export default function Ship({ hullParticles, plumeParticles }) {
   }, [plumeParticles]);
 
   const hullUniforms = useMemo(() => ({ uTime: { value: 0 }, uMorph: { value: 0 }, uSize: { value: POINT_SIZE } }), []);
-  const plumeUniforms = useMemo(() => ({ uTime: { value: 0 }, uLen: { value: 1.4 }, uAlpha: { value: 1 }, uSize: { value: POINT_SIZE } }), []);
+  const plumeUniforms = useMemo(() => ({ uTime: { value: 0 }, uLen: { value: 1.4 }, uFlow: { value: 0 }, uAlpha: { value: 1 }, uSize: { value: POINT_SIZE } }), []);
   const tmp = useMemo(
     () => ({
       pos: new Vector3(),
       focus: new Vector3(),
       stage: new Vector3(),
-      tangent: new Vector3(),
-      zero: new Vector3(),
-      m: new Matrix4(),
-      travel: new Quaternion(),
-      hero: new Quaternion().setFromRotationMatrix(new Matrix4().lookAt(new Vector3(), HERO_HEADING, UP)),
+      ascent: poseFrom(ASCENT_HEADING, UP),
+      launch: poseFrom(LAUNCH_HEADING, Z_AXIS),
       identity: new Quaternion(),
       goal: new Quaternion(),
       roll: new Quaternion(),
-      yaw: new Quaternion(),
-      turnRoll: new Quaternion(),
-      turn: 0, // 0 nose forward, 1 turned around (flying back toward the camera)
+      lift: 0, // 0 climbing up and right, 1 rising straight up (scrolling back up)
     }),
     []
   );
@@ -183,20 +186,15 @@ export default function Ship({ hullParticles, plumeParticles }) {
     tmp.pos.y += Math.sin(clock.elapsedTime * 1.2) * 0.08;
     ship.position.lerp(tmp.pos, 1 - Math.exp(-6 * delta));
 
-    // Matrix4.lookAt points -Z (the nose) along the route tangent.
-    tmp.m.lookAt(tmp.zero, ROUTE.getTangent(uShip, tmp.tangent), UP);
-    tmp.travel.setFromRotationMatrix(tmp.m);
     tmp.roll.setFromAxisAngle(Z_AXIS, dodge.bank * (1 - morph));
-    const turnGoal = journey.heading < 0 ? 1 : 0;
-    tmp.turn += (turnGoal - tmp.turn) * (1 - Math.exp(-TURN_RATE * Math.min(delta, 0.1)));
-    const turn = smoothstep(0, 1, tmp.turn);
-    tmp.yaw.setFromAxisAngle(UP, Math.PI * turn);
-    tmp.turnRoll.setFromAxisAngle(Z_AXIS, Math.sin(Math.PI * turn) * TURN_BANK);
-    tmp.travel.multiply(tmp.yaw).multiply(tmp.turnRoll);
-    tmp.goal.copy(tmp.travel).slerp(tmp.hero, heroWeight).slerp(tmp.identity, morph).multiply(tmp.roll);
+    // At the very top the ship is on its launch pose; below it, scrolling up lifts it off vertically.
+    const liftGoal = journey.heading < 0 ? 1 - heroWeight : 0;
+    tmp.lift += (liftGoal - tmp.lift) * (1 - Math.exp(-POSE_RATE * Math.min(delta, 0.1)));
+    tmp.goal.copy(tmp.ascent).slerp(tmp.launch, smoothstep(0, 1, tmp.lift)).slerp(tmp.identity, morph).multiply(tmp.roll);
     ship.quaternion.slerp(tmp.goal, 1 - Math.exp(-5 * delta));
-    // launch pose a little smaller: nose up and right, it must fit the column
-    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 1 - 0.22 * heroWeight : 1));
+    // Pose and size stay the same from launch to cruise (it must fit the right-hand column).
+    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 0.78 : 1));
+    journey.ship = ship;
 
     // R3F copies the `uniforms` props into the materials: write to the materials' own.
     const live = skin.current.material.uniforms;
@@ -205,7 +203,8 @@ export default function Ship({ hullParticles, plumeParticles }) {
     live.uSize.value = POINT_SIZE * gl.getPixelRatio();
     const exhaust = plume.current.material.uniforms;
     exhaust.uTime.value = clock.elapsedTime;
-    exhaust.uLen.value = plumeLength(journey.speed);
+    exhaust.uLen.value = plumeLength(journey.flow);
+    exhaust.uFlow.value = journey.flow;
     exhaust.uAlpha.value = 1 - morph;
     exhaust.uSize.value = POINT_SIZE * gl.getPixelRatio();
   });
