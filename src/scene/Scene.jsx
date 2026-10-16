@@ -6,6 +6,9 @@ import { journey } from "./journey";
 import { QUALITY } from "./quality";
 import CameraRig from "./CameraRig";
 import Stars from "./Stars";
+import Nebula from "./Nebula";
+import Streaks from "./Streaks";
+import Planets from "./Planets";
 import Ship from "./Ship";
 
 const BACKGROUND = "#07070a";
@@ -55,6 +58,9 @@ export default function Scene({ tier, onFail }) {
         <color attach="background" args={[BACKGROUND]} />
         <CameraRig />
         <Stars count={quality.stars} />
+        <Nebula count={quality.nebula} />
+        {quality.streaks > 0 && <Streaks count={quality.streaks} />}
+        <Planets bodyPoints={quality.planetPoints} ringPoints={quality.ringPoints} />
         <Ship hullParticles={quality.hullParticles} plumeParticles={quality.plume} />
         {quality.post && <Post />}
       </Canvas>
