@@ -10,7 +10,7 @@ export default function Automation() {
   const ref = useJourneySection("automation");
 
   return (
-    <section ref={ref} id="automation" className="relative py-24 md:py-32">
+    <section ref={ref} id="automation" className="relative py-12 md:py-14">
       <div className="mx-auto max-w-6xl px-4">
         <div className="rounded-3xl bg-bg/85 p-6 backdrop-blur-sm md:p-8 lg:max-w-[70%]">
           <SectionHeading kicker={t("ai_kicker")} title={t("ai_title")} lead={t("ai_lead")} />

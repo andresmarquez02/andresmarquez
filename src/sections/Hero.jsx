@@ -9,7 +9,7 @@ const PILLS = [1, 2, 3, 4, 5];
 
 export default function Hero() {
   const { t } = useTranslation();
-  const ref = useJourneySection("hero", undefined, { start: "top top" });
+  const ref = useJourneySection("hero", undefined, { start: "top top+=80" });
 
   useEffect(() => {
     const mm = gsap.matchMedia();

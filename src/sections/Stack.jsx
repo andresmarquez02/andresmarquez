@@ -8,7 +8,7 @@ export default function Stack() {
   const ref = useJourneySection("stack");
 
   return (
-    <section ref={ref} id="stack" className="relative py-28 md:py-40">
+    <section ref={ref} id="stack" className="relative py-12 md:py-14">
       <div className="mx-auto max-w-6xl px-4">
         <div className="rounded-3xl bg-bg/80 p-5 backdrop-blur-sm md:p-6 lg:max-w-[70%]">
           <SectionHeading kicker={t("stack_kicker")} title={t("stack_title")} lead={t("stack_lead")} />

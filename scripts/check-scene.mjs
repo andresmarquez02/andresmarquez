@@ -6,7 +6,7 @@ import {
 } from "../src/scene/math.js";
 import {
   bell, flybys, nextHeading, normalizeSpeed, fovFor, streakAlpha, streakLength, streakRate, plumeLength,
-  cruiseFlow, CRUISE_FLOW, ASCENT_HEADING, LAUNCH_HEADING,
+  cruiseFlow, CRUISE_FLOW, ASCENT_HEADING, LAUNCH_HEADING, ignition,
 } from "../src/scene/flight.js";
 import { PLANETS } from "../src/scene/planetData.js";
 import { cruiseOffset, frameShift } from "../src/scene/route.js";
@@ -165,7 +165,16 @@ test("cruise flow: the flight feels fast between launch and landing, even when n
   assert.ok(streakRate(1) > streakRate(0));
 });
 
-test("poses: the ship climbs, it never faces the reader or turns around", () => {
+test("lift-off burst: fast attack, slow fade, nothing before ignition", () => {
+  assert.equal(ignition(-1), 0);
+  assert.equal(ignition(-Infinity), 0);
+  assert.equal(ignition(NaN), 0);
+  assert.ok(ignition(0.125) > 0.4 && ignition(0.125) < 0.6, "ramps up in a fraction of a second");
+  assert.equal(ignition(0.25), 1);
+  assert.ok(ignition(1) < ignition(0.5) && ignition(3.5) < 0.05, "fades out within ~3 s");
+});
+
+test("hero and lift-off poses point the nose up, never at the reader", () => {
   for (const [x, y, z] of [ASCENT_HEADING, LAUNCH_HEADING]) {
     assert.ok(y > 0, "nose always points up");
     assert.ok(Math.abs(z) < 0.5, "never pointing at or away from the camera");
@@ -205,7 +214,7 @@ test("speed effects are subtle and bounded", () => {
   assert.equal(fovFor(0), 45);
   assert.equal(fovFor(5), 52);
   assert.equal(streakAlpha(0), 0);
-  assert.ok(Math.abs(streakAlpha(1) - 0.42) < 1e-12 && streakAlpha(9) === streakAlpha(1));
+  assert.ok(Math.abs(streakAlpha(1) - 0.28) < 1e-12 && streakAlpha(9) === streakAlpha(1));
   assert.ok(streakLength(1) <= 4.3 && plumeLength(1) <= 5.3);
   assert.ok(streakAlpha(0.3) < streakAlpha(0.6), "grows with speed");
 });

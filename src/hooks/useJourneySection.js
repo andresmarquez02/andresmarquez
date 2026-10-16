@@ -8,7 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 // Publishes how far the viewport's centre line has crossed this section
 // (0 = section top at the centre, 1 = section bottom at the centre) to the 3D
 // scene through `journey.section[id]`. Sections are contiguous, so exactly one
-// of them is "in progress" at any time. The hero passes start: "top top": its top
+// of them is "in progress" at any time. The hero passes start: "top top+=80" (its top
+// sits under the 80px sticky header, so the journey starts at scroll 0): its top
 // is already above the centre line at scroll 0, so the default would begin at 0.5.
 // Contact, the last section, passes end: "bottom bottom" so it reaches 1 at the
 // very end of the page.

@@ -117,7 +117,7 @@ export default function Projects() {
       ref={rootRef}
       id="projects"
       data-section="projects"
-      className="scroll-mt-24 pb-28"
+      className="scroll-mt-24 pb-16"
     >
       <div className="mb-8">
         <h2

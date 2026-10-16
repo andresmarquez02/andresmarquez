@@ -73,8 +73,16 @@ export function cruiseFlow(speed, r) {
 }
 
 export const fovFor = (flow) => 45 + 7 * clamp01(flow);
-export const streakAlpha = (flow) => 0.42 * smoothstep(0.1, 0.7, flow);
+export const streakAlpha = (flow) => 0.28 * smoothstep(0.1, 0.8, flow);
 export const streakLength = (flow) => 0.8 + 3.4 * clamp01(flow);
 // World units per second the speed lines slide past the ship.
 export const streakRate = (flow) => 14 + 80 * clamp01(flow);
 export const plumeLength = (flow) => 2 + 3.2 * clamp01(flow);
+
+// Lift-off burst, 0..1, `t` seconds after ignition: a fast attack, then a
+// slow fade over ~3 s. Drives the forward lurch and the extra flame.
+export function ignition(t) {
+  if (!(t >= 0)) return 0;
+  if (t < 0.25) return t / 0.25;
+  return Math.exp(-(t - 0.25) * 1.1);
+}

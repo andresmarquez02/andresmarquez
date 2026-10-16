@@ -56,7 +56,7 @@ export default function Experiences() {
       ref={rootRef}
       id="experience"
       data-section="experience"
-      className="scroll-mt-24 pb-28"
+      className="scroll-mt-24 pb-16"
     >
       <div className="mb-12 flex items-end justify-between gap-6">
         <h2

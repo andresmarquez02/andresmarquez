@@ -68,7 +68,7 @@ export const stageScale = (aspect) => (aspect >= 1 ? 1 : 0.42);
 // While cruising the ship flies on the flight line (wide screens: already in
 // the right-hand column thanks to the lens shift; narrow: above the text).
 export function cruiseOffset(aspect, target = new Vector3()) {
-  return aspect >= 1 ? target.set(3, 0.2, 0) : target.set(0, 3, 0);
+  return aspect >= 1 ? target.set(1.6, 0.2, 0) : target.set(0, 3, 0);
 }
 
 // Planet position relative to the route: above or below the flight line on
