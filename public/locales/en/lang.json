@@ -20,7 +20,9 @@
   "hero_kicker": "Andrés Márquez · Fullstack & Automation Engineer",
   "hero_line1": "Software that scales.",
   "hero_line2": "Work that runs itself.",
-  "hero_lead": "This is how I build software: design patterns that keep it simple, architecture that scales, AI-assisted development, testing and deployment. Every phase with human judgment, and automations that remove manual work.",
+  "hero_term_design": "design patterns that keep it simple, architecture that scales",
+  "hero_term_develop": "with AI and human judgment on every change; testing and deployment",
+  "hero_term_automate": "n8n · Zapier · GoHighLevel · Python: manual work out",
   "hero_scroll": "Explore the process",
 
   "process_kicker": "01 — Process",

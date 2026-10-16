@@ -20,7 +20,9 @@
   "hero_kicker": "Andrés Márquez · Fullstack & Automation Engineer",
   "hero_line1": "Software que escala.",
   "hero_line2": "Procesos que se automatizan.",
-  "hero_lead": "Así construyo software: patrones de diseño que lo mantienen simple, arquitectura que escala, desarrollo con IA, pruebas y despliegue. Cada fase con criterio humano y automatizaciones que eliminan el trabajo manual.",
+  "hero_term_design": "patrones de diseño que lo mantienen simple, arquitectura que escala",
+  "hero_term_develop": "con IA y criterio humano en cada cambio; pruebas y despliegue",
+  "hero_term_automate": "n8n · Zapier · GoHighLevel · Python: fuera el trabajo manual",
   "hero_scroll": "Recorre el proceso",
 
   "process_kicker": "01 — Proceso",

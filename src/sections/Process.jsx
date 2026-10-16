@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useJourneySection } from "../hooks/useJourneySection";
+import TerminalCard from "../components/TerminalCard";
 import { PROCESS_STEPS } from "../data/content";
 import SectionHeading from "./SectionHeading";
 
@@ -16,15 +17,14 @@ export default function Process() {
           <SectionHeading kicker={t("process_kicker")} title={t("process_title")} lead={t("process_lead")} />
           <ol className="mt-12 grid gap-3 md:grid-cols-2">
           {PROCESS_STEPS.map((n) => (
-            <li key={n} className="rounded-2xl border border-fg/10 bg-surface/90 p-5 backdrop-blur-sm">
-              <p className="font-mono text-[11px] tracking-[0.3em] text-accent">
-                {String(n).padStart(2, "0")} / {String(PROCESS_STEPS.length).padStart(2, "0")}
-              </p>
-              <h3 className="mt-2 font-display text-xl font-semibold text-fg">{t(`process_step${n}_title`)}</h3>
-              <p className="mt-2 text-sm text-fg/75">{t(`process_step${n}_desc`)}</p>
-              <p className="mt-3 border-t border-fg/10 pt-3 text-xs text-fg/55">
-                <span className="text-signal">{t("proof")}</span> {t(`process_step${n}_proof`)}
-              </p>
+            <li key={n} className="flex">
+              <TerminalCard title={`~/process/${String(n).padStart(2, "0")}`} className="flex w-full flex-col" bodyClassName="flex-1 p-5">
+                <h3 className="font-display text-xl font-semibold text-fg">{t(`process_step${n}_title`)}</h3>
+                <p className="mt-2 text-sm text-fg/75">{t(`process_step${n}_desc`)}</p>
+                <p className="mt-3 border-t border-dashed border-fg/15 pt-3 text-xs text-fg/55">
+                  <span className="text-signal">{t("proof")}</span> {t(`process_step${n}_proof`)}
+                </p>
+              </TerminalCard>
             </li>
           ))}
           </ol>

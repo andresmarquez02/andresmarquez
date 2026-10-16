@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EXPERIENCES } from "../data/content";
 import Experience from "./Experience";
+import TerminalCard from "./TerminalCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,21 +31,6 @@ export default function Experiences() {
           ease: "power3.out",
           scrollTrigger: { trigger: rootRef.current, start: "top 75%", once: true },
         });
-        gsap.fromTo(
-          "[data-exp-line]",
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: "none",
-            transformOrigin: "top",
-            scrollTrigger: {
-              trigger: rootRef.current,
-              start: "top 70%",
-              end: "bottom 80%",
-              scrub: 0.6,
-            },
-          }
-        );
       }, rootRef);
       return () => ctx.revert();
     });
@@ -58,7 +44,7 @@ export default function Experiences() {
       data-section="experience"
       className="scroll-mt-24 pb-16"
     >
-      <div className="mb-12 flex items-end justify-between gap-6">
+      <div className="mb-8 flex items-end justify-between gap-6">
         <h2
           data-section-title
           className="font-display text-3xl font-semibold tracking-tight text-fg md:text-5xl"
@@ -70,16 +56,13 @@ export default function Experiences() {
           className="hidden h-px flex-1 max-w-[40%] translate-y-[-0.55em] bg-gradient-to-r from-fg/15 to-transparent md:block"
         />
       </div>
-      <ol className="relative ms-3">
-        <span
-          data-exp-line
-          aria-hidden
-          className="absolute left-0 top-2 h-full w-px bg-gradient-to-b from-accent/70 via-signal/50 to-transparent"
-        />
-        {EXPERIENCES.map((experience, i) => (
-          <Experience key={`${experience.id}-${i}`} experience={experience} />
-        ))}
-      </ol>
+      <TerminalCard title="~/work — git log" bodyClassName="p-5 md:p-6">
+        <ol className="space-y-6">
+          {EXPERIENCES.map((experience, i) => (
+            <Experience key={`${experience.id}-${i}`} experience={experience} />
+          ))}
+        </ol>
+      </TerminalCard>
     </section>
   );
 }

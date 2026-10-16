@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 export default function ProjectIndex({ projects }) {
   const { t } = useTranslation();
   return (
-    <ul className="border-t border-fg/10">
+    <ul>
       {projects.map((project, i) => {
         // "#case-…" links jump to a private case study on this page.
         const external = !project.urlProject.startsWith("#");
         return (
-          <li key={project.id} data-project-card className="border-b border-fg/10">
+          <li key={project.id} data-project-card className="border-b border-dashed border-fg/15 last:border-b-0">
             <a
               href={project.urlProject}
               {...(external && { target: "_blank", rel: "noopener noreferrer" })}

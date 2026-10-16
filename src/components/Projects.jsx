@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectIndex from "./ProjectIndex";
+import TerminalCard from "./TerminalCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -128,7 +129,9 @@ export default function Projects() {
         </h2>
       </div>
 
-      <ProjectIndex projects={PROJECTS} />
+      <TerminalCard title="~/projects — ls" bodyClassName="px-4 md:px-6">
+        <ProjectIndex projects={PROJECTS} />
+      </TerminalCard>
     </section>
   );
 }
