@@ -17,7 +17,7 @@ function hasWebGL2() {
 
 // Master switch for the 3D scene. Off on every device: the page is static.
 // Set to true to bring the scene back (the code stays in place).
-export const SCENE_ENABLED = false;
+export const SCENE_ENABLED = true;
 
 export function detectTier() {
   // QA override: ?tier=high|low|off forces a tier (e.g. to review the 3D scene).
