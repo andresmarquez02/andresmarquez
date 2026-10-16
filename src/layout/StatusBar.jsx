@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const SECTIONS = [
-  { id: "hero", label: "Intro" },
-  { id: "process", label: "Process" },
-  { id: "automation", label: "AI" },
-  { id: "stack", label: "Stack" },
-  { id: "work", label: "Work" },
-  { id: "contact", label: "Contact" },
+  { id: "hero", label: "status_intro" },
+  { id: "process", label: "status_process" },
+  { id: "automation", label: "status_ai" },
+  { id: "stack", label: "status_stack" },
+  { id: "work", label: "status_work" },
+  { id: "contact", label: "status_contact" },
 ];
 
 export default function StatusBar() {
-  const [section, setSection] = useState("Intro");
+  const { t } = useTranslation();
+  const [section, setSection] = useState("status_intro");
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -31,8 +33,8 @@ export default function StatusBar() {
         const match = current && SECTIONS.find((s) => s.id === current.target.id);
         if (match) setSection(match.label);
       },
-      // A zero-height band at mid-screen: works for sections taller than the
-      // viewport (process is 600vh), where a ratio threshold never fires.
+      // A zero-height band at mid-screen: works for sections taller than
+      // the viewport, where a ratio threshold never fires.
       { rootMargin: "-50% 0px -50% 0px" }
     );
     SECTIONS.forEach(({ id }) => {
@@ -49,7 +51,7 @@ export default function StatusBar() {
     >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-end px-4 font-mono text-[10px] uppercase tracking-[0.3em] text-fg/45">
         <div className="flex items-center gap-3">
-          <span className="text-fg/70">{section}</span>
+          <span className="text-fg/70">{t(section)}</span>
           <span aria-hidden className="h-px w-8 bg-fg/15" />
           <span className="tabular-nums text-fg/55">
             {progress.toFixed(0).padStart(2, "0")}%

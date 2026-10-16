@@ -189,7 +189,8 @@ export default function Ship({ hullParticles, plumeParticles }) {
 
   return (
     <group ref={group}>
-      <points ref={skin} frustumCulled={false}>
+      {/* renderOrder 4: always draw after the planets (renderOrder 1-3, NormalBlending). */}
+      <points ref={skin} frustumCulled={false} renderOrder={4}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[particles.position, 3]} />
           <bufferAttribute attach="attributes-aColor" args={[particles.color, 3]} />
@@ -205,7 +206,7 @@ export default function Ship({ hullParticles, plumeParticles }) {
           blending={AdditiveBlending}
         />
       </points>
-      <points ref={plume} frustumCulled={false}>
+      <points ref={plume} frustumCulled={false} renderOrder={4}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[nozzles.origin, 3]} />
           <bufferAttribute attach="attributes-aSeed" args={[nozzles.seeds, 1]} />

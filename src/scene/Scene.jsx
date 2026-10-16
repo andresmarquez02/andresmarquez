@@ -48,6 +48,7 @@ export default function Scene({ tier, onFail }) {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
       <Canvas
+        style={{ pointerEvents: "none" }}
         frameloop={visible ? "always" : "never"}
         dpr={[1, quality.maxDpr]}
         gl={{ antialias: false, powerPreference: "high-performance" }}

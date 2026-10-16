@@ -18,7 +18,7 @@ function hasWebGL2() {
 export function detectTier() {
   // QA override: ?tier=high|low|off forces a tier (e.g. to review the static page).
   const forced = new URLSearchParams(window.location.search).get("tier");
-  if (forced === "off" || forced in QUALITY) return forced;
+  if (forced === "off" || Object.hasOwn(QUALITY, forced)) return forced;
   return pickTier({
     webgl: hasWebGL2(),
     reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,

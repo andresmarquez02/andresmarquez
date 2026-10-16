@@ -13,7 +13,7 @@ export default function Footer() {
           <span className="text-fg/70">© {year}</span>{" "}
           <span>Andrés Márquez</span>{" "}
           <span aria-hidden className="mx-2 text-fg/25">/</span>{" "}
-          <span>Built in Caracas</span>
+          <span>{t("footer_built")}</span>
         </p>
         <ul className="flex items-center gap-2">
           {CONTACTS.map(({ icon, url, name }) => (

@@ -29,6 +29,11 @@ export default function App() {
     ScrollTrigger.refresh();
   }, [i18n.language, tier]);
 
+  // Web fonts change text metrics once loaded; recompute trigger windows.
+  useEffect(() => {
+    document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  }, []);
+
   return (
     <div className="relative text-fg">
       {immersive ? (

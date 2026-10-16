@@ -6,6 +6,13 @@
   "contact": "Contact",
   "language": "Language",
 
+  "status_intro": "Intro",
+  "status_process": "Process",
+  "status_ai": "AI",
+  "status_stack": "Stack",
+  "status_work": "Work",
+  "status_contact": "Contact",
+
   "availability": "Available for work",
   "hi": "Hi, I'm Andrés Márquez",
   "contact_me": "Contact me",
@@ -123,11 +130,20 @@
   "code": "View code",
   "view": "Visit site",
 
+  "cat_website": "Website",
+  "cat_vehicles": "Vehicles",
+  "cat_software": "Software",
+  "cat_ecommerce": "E-commerce",
+  "cat_services": "Services",
+  "cat_automation": "Automation",
+  "cat_data": "Data",
+
   "contact_kicker": "05 — Contact",
   "contact_title": "Shall we build the next gear?",
   "contact_lead": "Tell me the problem. I'll answer with a process.",
   "contact_about": "I'm Andrés Márquez, a fullstack developer and automation engineer based in Caracas. I work remotely with teams in North America and Europe.",
   "photo_alt": "Portrait of Andrés Márquez",
+  "footer_built": "Built in Caracas",
 
   "spanish": "Spanish",
   "english": "English"

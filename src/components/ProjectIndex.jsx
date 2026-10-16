@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function ProjectIndex({ projects }) {
+  const { t } = useTranslation();
   return (
     <ul className="border-t border-fg/10">
       {projects.map((project, i) => {
@@ -18,7 +21,9 @@ export default function ProjectIndex({ projects }) {
                 {project.title}
               </span>
               <span className="hidden font-mono text-[11px] uppercase tracking-widest text-fg/40 md:inline">
-                {project.categories.join(" / ")}
+                {project.categories
+                  .map((c) => t(`cat_${c.toLowerCase().replace(/[^a-z]/g, "")}`, { defaultValue: c }))
+                  .join(" / ")}
               </span>
               <span className="font-mono text-xs tabular-nums text-fg/45">
                 {project.year}
