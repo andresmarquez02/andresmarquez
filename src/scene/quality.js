@@ -15,10 +15,15 @@ function hasWebGL2() {
   }
 }
 
+// Master switch for the 3D scene. Off on every device: the page is static.
+// Set to true to bring the scene back (the code stays in place).
+export const SCENE_ENABLED = false;
+
 export function detectTier() {
-  // QA override: ?tier=high|low|off forces a tier (e.g. to review the static page).
+  // QA override: ?tier=high|low|off forces a tier (e.g. to review the 3D scene).
   const forced = new URLSearchParams(window.location.search).get("tier");
   if (forced === "off" || Object.hasOwn(QUALITY, forced)) return forced;
+  if (!SCENE_ENABLED) return "off";
   return pickTier({
     webgl: hasWebGL2(),
     reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
