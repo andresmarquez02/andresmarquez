@@ -10,6 +10,7 @@ import Nebula from "./Nebula";
 import Streaks from "./Streaks";
 import Planets from "./Planets";
 import Ship from "./Ship";
+import StackField from "./StackField";
 
 const BACKGROUND = "#07070a";
 
@@ -62,6 +63,7 @@ export default function Scene({ tier, onFail }) {
         {quality.streaks > 0 && <Streaks count={quality.streaks} />}
         <Planets bodyPoints={quality.planetPoints} ringPoints={quality.ringPoints} />
         <Ship hullParticles={quality.hullParticles} plumeParticles={quality.plume} />
+        <StackField />
         {quality.post && <Post />}
       </Canvas>
     </div>
