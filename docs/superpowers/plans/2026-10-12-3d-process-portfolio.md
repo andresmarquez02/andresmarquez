@@ -17,6 +17,7 @@
 - Versiones: React 19.2 (R3F 9.8.1 exige `react <19.4`), three 0.184, @react-three/fiber 9.8.1, @react-three/postprocessing 3.2.0, postprocessing 6.x. **No** instalar `@react-three/drei`.
 - Solo tema oscuro. Tokens: fondo `#07070a`, ámbar `#FCD34D` (brillo `#F59E0B`), azul `signal` `#4F8CFF`.
 - **Estilo de partículas luminosas.** Prohibido añadir materiales realistas (`MeshStandardMaterial` con luces), asteroides, engranajes o más de dos planetas.
+- **Ninguna animación ocupa más del 25 % de la pantalla en escritorio** (cohete, planetas, retrato). Los puntos de los planetas son finos: nunca más de 6 px.
 - Todo el texto vive en el DOM y en `public/locales/{es,en}/lang.json`. El canvas es `aria-hidden` y `pointer-events: none`.
 - Nada de `setState` por frame: la escena lee `journey` dentro de `useFrame`.
 - `src/scene/math.js`, `flight.js`, `planetData.js` y `journey.js` no importan three.js (`math.js` y `flight.js` corren en Node).
@@ -42,7 +43,7 @@
 | Node.js en "Formándome ahora" | Tarea 3 (`content.js`) |
 | Experiencia y proyectos sin choque con las letras | Tarea 5 (`Work.jsx`, columna de texto) y Tarea 4 (`scene-scrim`) |
 | Turbo menos fuerte | Tarea 6 (cola) |
-| Dos planetas grandes, estrellas | Tarea 7 |
+| Dos planetas, estrellas; puntos de los planetas finos; nada pasa del 25 % de la pantalla en escritorio | Tareas 2 y 7 |
 | Viaje con animaciones de Three.js de primer nivel | Tareas 2, 4, 6 y 7 (director de vuelo) |
 
 ## Review Focus
@@ -213,7 +214,7 @@ EOF
   - `constellationLayout(groupSizes, rng): { stars: {x, y, z, group}[], segments: [a, b][] }`
   - `fibonacciSphere(count): Float32Array` (`count * 3`, vectores unitarios)
 - Produces (`src/scene/flight.js`, sin three.js): `bell(distance, width)`, `flybys(z, planets): { bank, swerve, look }`, `SPEED_REFERENCE`, `normalizeSpeed(unitsPerSecond)`, `fovFor(speed)`, `streakAlpha(speed)`, `streakLength(speed)`, `plumeLength(speed)`.
-- Produces (`src/scene/planetData.js`): `PLANETS: { id, z, dx, dy, radius, kind: "gas" | "giant", ring, reach }[]` (dos planetas).
+- Produces (`src/scene/planetData.js`): `PLANETS: { id, z, dx, dy, radius, kind: "gas" | "giant", ring, reach }[]` (dos planetas, radio 3 a 4,5).
 - Produces (`src/scene/route.js`): `STATIONS: Vector3[6]`, `SEGMENT_LENGTH: number[5]`, `ROUTE: CatmullRomCurve3`, `stationU(id)`, `zAt(u)`, `uAtZ(z)`, `aheadU(u, distance)`, `shipLead(r)`, `CAMERA_OFFSET: Vector3`, `stageOffset(id, aspect, target?)`, `stageScale(aspect)`, `cruiseOffset(aspect, target?)`, `planetOffset(planet, aspect, target?)`.
 
 - [ ] **Step 1: Añadir el script `check`**
@@ -331,13 +332,13 @@ test("uAtZ inverts zAt", () => {
   for (const u of [0, 0.13, 0.5, 0.77, 1]) assert.ok(Math.abs(uAtZ(zAt(u)) - u) < 1e-6);
 });
 
-test("two big planets, clear of the ship's path and of each other", () => {
+test("two planets, clear of the ship's path and of each other", () => {
   assert.equal(PLANETS.length, 2);
   const ship = cruiseOffset(2).x; // where the ship flies on wide screens
   let previous = zAt(0);
   for (const p of PLANETS) {
     assert.ok(p.z < previous && p.z > zAt(1), `${p.id} out of order or off the route`);
-    assert.ok(p.radius >= 6, `${p.id} should be big`);
+    assert.ok(p.radius >= 3 && p.radius <= 4.5, `${p.id}: big but under a quarter of the screen`);
     assert.ok(p.dx - p.radius >= ship + 3, `${p.id} would clip the ship`);
     if (p.ring) assert.ok(p.dx - p.radius * 1.75 >= ship + 1, `${p.id}'s ring would cross the ship`);
     assert.ok(p.reach >= 20 && p.reach <= 45);
@@ -560,10 +561,12 @@ export const plumeLength = (speed) => 1.4 + 1.6 * clamp01(speed);
 // `z` is where the ship passes closest (world z along the route), `dx`/`dy`
 // the offset from the flight line (right of it, away from the text column),
 // `reach` how far (world units) the planet's pull on the ship and camera is
-// felt. They are big on purpose: two clear bodies instead of a crowded sky.
+// felt. Two clear bodies instead of a crowded sky, sized so that even at the
+// closest pass neither covers more than ~25% of a desktop screen (measured:
+// 21% and 16% at 1440x900).
 export const PLANETS = [
-  { id: "solis", z: -62, dx: 16, dy: 1.2, radius: 6.5, kind: "gas", ring: true, reach: 34 },
-  { id: "cobalt", z: -182, dx: 15.5, dy: -0.6, radius: 7.5, kind: "giant", ring: false, reach: 38 },
+  { id: "solis", z: -62, dx: 11, dy: 1.2, radius: 3.6, kind: "gas", ring: true, reach: 34 },
+  { id: "cobalt", z: -182, dx: 11, dy: -0.6, radius: 4.2, kind: "giant", ring: false, reach: 38 },
 ];
 ```
 
@@ -622,7 +625,7 @@ export const CAMERA_OFFSET = new Vector3(0, 0.6, 14);
 
 // Where each station's 3D piece sits relative to its route point: right of
 // the text on wide screens, above it on narrow ones.
-const STAGE_WIDE = { hero: [3.4, 0, 0], stack: [3.6, 0, 0], contact: [3.8, 0, 0] };
+const STAGE_WIDE = { hero: [4.4, 0.4, 0], stack: [4.6, 0, 0], contact: [4.6, 0, 0] };
 const STAGE_NARROW_Y = { hero: 3.8, stack: 1.6, contact: 2.4 };
 
 export function stageOffset(id, aspect, target = new Vector3()) {
@@ -1731,8 +1734,8 @@ export const journey = {
 import { pickTier } from "./math";
 
 export const QUALITY = {
-  high: { stars: 6000, hullParticles: 28000, plume: 900, streaks: 260, nebula: 350, planetPoints: 26000, ringPoints: 9000, bloom: true, post: true, maxDpr: 1.75 },
-  low: { stars: 2500, hullParticles: 10000, plume: 350, streaks: 0, nebula: 180, planetPoints: 10000, ringPoints: 3500, bloom: false, post: false, maxDpr: 1.25 },
+  high: { stars: 6000, hullParticles: 28000, plume: 900, streaks: 260, nebula: 350, planetPoints: 60000, ringPoints: 22000, bloom: true, post: true, maxDpr: 1.75 },
+  low: { stars: 2500, hullParticles: 10000, plume: 350, streaks: 0, nebula: 180, planetPoints: 24000, ringPoints: 9000, bloom: false, post: false, maxDpr: 1.25 },
 };
 
 function hasWebGL2() {
@@ -3195,7 +3198,7 @@ const PORTRAIT_SAMPLE_WIDTH = 160;
 // face, neck and pendant only. Calibration knob, measured on this photo.
 const PORTRAIT_THRESHOLD = 0.3;
 const SHIP_SCALE = 0.95;
-const PORTRAIT_HEIGHT = 7 / SHIP_SCALE; // 7 world units once the ship scale applies
+const PORTRAIT_HEIGHT = 9 / SHIP_SCALE; // 9 world units once the ship scale applies
 // Hero pose: nose up and to the right, like a launch. Calibration knob.
 const HERO_HEADING = new Vector3(1, 0.55, 0.3).normalize();
 const UP = new Vector3(0, 1, 0);
@@ -3349,7 +3352,7 @@ export default function Ship({ hullParticles, plumeParticles }) {
     tmp.roll.setFromAxisAngle(Z_AXIS, dodge.bank * (1 - morph));
     tmp.goal.copy(tmp.travel).slerp(tmp.hero, heroWeight).slerp(tmp.identity, morph).multiply(tmp.roll);
     ship.quaternion.slerp(tmp.goal, 1 - Math.exp(-5 * delta));
-    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (1 + 0.3 * heroWeight));
+    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect));
 
     // R3F copies the \`uniforms\` props into the materials: write to the materials' own.
     const live = skin.current.material.uniforms;
@@ -3672,7 +3675,10 @@ const KINDS = {
 };
 const SUN = new Vector3(-0.8, 0.3, 0.55).normalize(); // light comes from the flight line's side
 const RING = { inner: 1.35, outer: 1.75 }; // in planet radii
-const COVERAGE = 1.3; // point size relative to the spacing between points
+// Point size relative to the spacing between points. Below 1 on purpose: many
+// small points with hairline gaps read as fine glitter, not as big dots.
+const COVERAGE = 0.8;
+const MAX_POINT_PX = 6; // hard cap at the closest flyby
 
 // Planet surface points are sized from how many of them cover the visible
 // hemisphere, so the globe looks solid at any distance or resolution.
@@ -3701,7 +3707,7 @@ const bodyVertex = /* glsl */ `
     float dist = length(cameraPosition - world.xyz);
     vAlpha = side * smoothstep(260.0, 120.0, dist) * uReveal;
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = clamp(${COVERAGE.toFixed(2)} * uSpacing * uF * (0.8 + 0.4 * fract(aSeed * 91.7)) / -mv.z, 1.0, 16.0);
+    gl_PointSize = clamp(${COVERAGE.toFixed(2)} * uSpacing * uF * (0.8 + 0.4 * fract(aSeed * 91.7)) / -mv.z, 1.0, ${MAX_POINT_PX.toFixed(1)});
   }
 `;
 
@@ -3822,7 +3828,7 @@ export default function Planets({ bodyPoints, ringPoints }) {
             <pointsMaterial size={planet.radius * 7.2} map={halo} color={KINDS[planet.kind].rim} transparent opacity={0.22} depthWrite={false} blending={AdditiveBlending} />
           </points>
           <group ref={(node) => { spins.current[i] = node; }}>
-            <points frustumCulled={false} renderOrder={2}>
+            <points renderOrder={2}>
               <bufferGeometry>
                 <bufferAttribute attach="attributes-position" args={[body.position, 3]} />
                 <bufferAttribute attach="attributes-aColor" args={[body.color, 3]} />
@@ -3832,7 +3838,7 @@ export default function Planets({ bodyPoints, ringPoints }) {
             </points>
           </group>
           {ring && (
-            <points frustumCulled={false} rotation={[0.38, 0, 0.28]} renderOrder={3}>
+            <points rotation={[0.38, 0, 0.28]} renderOrder={3}>
               <bufferGeometry>
                 <bufferAttribute attach="attributes-position" args={[ring.position, 3]} />
                 <bufferAttribute attach="attributes-aColor" args={[ring.color, 3]} />
@@ -3878,8 +3884,10 @@ Expected: los tres PASS.
 Expected:
 - Consola sin `Shader Error`.
 - Hero limpio: ningún planeta a la vista en scroll 0.
-- Sección IA: un planeta **grande** de partículas ámbar con anillo entra por la derecha; el cohete lo bordea por su lado izquierdo, se inclina y se aparta un poco, y la cámara lo mira de reojo.
-- Sección Trabajo (inicio): un segundo planeta **grande** azul con bandas entra por la derecha.
+- Sección IA: un planeta de partículas ámbar con anillo entra por la derecha; el cohete lo bordea por su lado izquierdo, se inclina y se aparta un poco, y la cámara lo mira de reojo.
+- Sección Trabajo (inicio): un segundo planeta azul con bandas entra por la derecha.
+- Los puntos de los planetas se ven **finos** (grano, no puntos gordos), también en la pasada más cercana.
+- Ningún elemento (cohete, planeta, retrato) ocupa más de una cuarta parte de la pantalla a 1440×900: mira la pasada más cercana de cada planeta y el retrato de Contacto.
 - Solo hay esos dos planetas en todo el viaje; no hay asteroides, anillos de estaciones ni engranajes.
 - Un scroll rápido hace aparecer, tenues, las líneas de velocidad y abre un poco el campo de visión; al parar se calman.
 - El texto de la izquierda se lee bien en todas las secciones, incluida Trabajo.

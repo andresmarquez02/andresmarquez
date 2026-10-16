@@ -10,7 +10,8 @@ Convertir el portafolio en una experiencia de scroll 3D que comunique **cómo co
 Éxito significa:
 
 - Un visitante puede nombrar las 6 fases del proceso después de recorrer la página.
-- El cohete vuela durante **todo** el scroll, pasa cerca de dos planetas grandes y nunca queda tapado por el texto.
+- El cohete vuela durante **todo** el scroll, pasa cerca de dos planetas y nunca queda tapado por el texto.
+- **Ninguna animación ocupa más del 25 % de la pantalla en escritorio** (medido a 1440×900: cohete 17 % en el hero y ~2 % en crucero, planetas 21 % y 16 % en su pasada más cercana, retrato final ~9 %, estimado).
 - La página sigue funcionando sin WebGL, con `prefers-reduced-motion` y en móvil.
 - Experiencia, proyectos, contacto e i18n (es/en) siguen disponibles y rastreables por buscadores.
 - Carga inicial no empeora: el texto del hero aparece antes de que cargue la escena 3D.
@@ -19,7 +20,7 @@ Convertir el portafolio en una experiencia de scroll 3D que comunique **cómo co
 
 | Tema | Decisión |
 |---|---|
-| Metáfora | Un cohete de partículas vuela de forma continua por el universo (scroll = cámara) y pasa cerca de **dos planetas grandes**. Sin engranajes. |
+| Metáfora | Un cohete de partículas vuela de forma continua por el universo (scroll = cámara) y pasa cerca de **dos planetas**. Sin engranajes. |
 | Estilo | **Partículas luminosas** ámbar y azul sobre fondo oscuro, como el cohete de la referencia. Nada de materiales realistas: ni cascos metálicos, ni sombreado PBR, ni asteroides. |
 | Proceso | Sección compacta de 6 fases (Descubrir, Diseñar, Construir con IA, Automatizar, Verificar, Escalar y entregar). Sin sticky ni scroll extra. |
 | Identidad | Solo tema oscuro. Acento ámbar + azul eléctrico. Se elimina el toggle de tema y el modo claro. |
@@ -50,7 +51,7 @@ index.html
    │   ├─ Stars        6 000 estrellas que titilan
    │   ├─ Nebula       tres nubes de polvo muy tenues
    │   ├─ Streaks      líneas de velocidad, solo al hacer scroll rápido
-   │   ├─ Planets      dos planetas grandes hechos de partículas
+   │   ├─ Planets      dos planetas hechos de partículas finas
    │   ├─ Ship         el cohete de partículas; en Contacto se convierte en el retrato
    │   ├─ StackField   constelaciones del stack (solo en la sección Stack)
    │   └─ Post         Bloom + Vignette + un toque de aberración cromática
@@ -114,14 +115,14 @@ El vuelo es una pequeña coreografía, toda en funciones puras con tests:
 
 **Retrato.** En Contacto las mismas partículas se reordenan y forman el retrato de Andrés (atributo `aPortrait` + `mix` escalonado en el shader), con la foto `public/images/andres.jpg` (recorte de cabeza y hombros, umbral de luminancia 0,3). El retrato real aparece también como `<img>` en el DOM.
 
-**Planets.** Dos planetas grandes de partículas, del mismo estilo que el cohete: una esfera de Fibonacci con bandas de latitud y manchas de nube, un halo y, el primero, un anillo de partículas.
+**Planets.** Dos planetas de partículas **finas**, del mismo estilo que el cohete: una esfera de Fibonacci con 60 000 puntos, bandas de latitud y manchas de nube, un halo y, el primero, un anillo de partículas.
 
 | Planeta | `z` | Radio | Aspecto |
 |---|---|---|---|
-| Solis | −62 (sección IA) | 6,5 | gigante gaseoso ámbar con anillo |
-| Cobalt | −182 (sección Trabajo) | 7,5 | gigante azul con bandas |
+| Solis | −62 (sección IA) | 3,6 | gigante gaseoso ámbar con anillo |
+| Cobalt | −182 (sección Trabajo) | 4,2 | gigante azul con bandas |
 
-Aparecen al empezar el viaje (revelado entre r = 0,1 y 0,6), así el hero queda limpio. El tamaño de cada punto se calcula con cuántos puntos cubren el hemisferio visible, para que el globo se vea sólido a cualquier distancia o resolución. Los puntos de la cara oculta se atenúan.
+Aparecen al empezar el viaje (revelado entre r = 0,1 y 0,6), así el hero queda limpio. El tamaño de cada punto se calcula con cuántos puntos cubren el hemisferio visible: 0,8 veces el espaciado y nunca más de 6 px, así el globo se ve sólido pero con grano fino, a cualquier distancia o resolución (una primera versión llegaba a 16 px y se veía a puntos gordos). Los puntos de la cara oculta se atenúan. Los radios y las distancias están calibrados para que ningún planeta pase del 25 % de la pantalla en escritorio.
 
 **Stars / Nebula / Streaks.** Estrellas con parpadeo propio, casi todas blancas; tres nubes de polvo casi invisibles (opacidad 0,03) a la derecha y al fondo; líneas de velocidad que solo existen con scroll rápido.
 
@@ -215,7 +216,7 @@ Se añaden las claves de hero, proceso, IA, casos, stack, trabajo y contacto. Se
 |---|---|---|---|
 | Estrellas | 6 000 | 2 500 | — |
 | Partículas del cohete | 28 000 | 10 000 | — |
-| Puntos por planeta / anillo | 26 000 / 9 000 | 10 000 / 3 500 | — |
+| Puntos por planeta / anillo | 60 000 / 22 000 | 24 000 / 9 000 | — |
 | Nebulosa / cola | 350 / 900 | 180 / 350 | — |
 | Líneas de velocidad | 260 | no | — |
 | Post (Bloom, Vignette, aberración) | sí | no | — |
@@ -236,7 +237,7 @@ Se añaden las claves de hero, proceso, IA, casos, stack, trabajo y contacto. Se
 ## 9. Verificación
 
 - `npm run lint` (flat config) sin problemas y `npm run build` correcto.
-- `npm run check`: 14 tests `node:test` sobre la lógica pura (ruta continua, tiers, PRNG, muestreo del retrato, constelaciones, esfera de Fibonacci, planetas grandes y fuera del camino del cohete, `uAtZ`, pasadas junto a planetas, efectos de velocidad acotados).
+- `npm run check`: 14 tests `node:test` sobre la lógica pura (ruta continua, tiers, PRNG, muestreo del retrato, constelaciones, esfera de Fibonacci, planetas de tamaño acotado y fuera del camino del cohete, `uAtZ`, pasadas junto a planetas, efectos de velocidad acotados).
 - Comprobación manual en navegador por tarea: scroll adelante y atrás, idioma, móvil, `?tier=off`, consola sin errores.
 - Medición final: Lighthouse del hero.
 
@@ -283,6 +284,8 @@ Pedidos y cómo quedaron:
 | Añadir Node.js a "Formándome ahora" | Hecho |
 | Experiencia y proyectos sin choque con las letras | Panel casi opaco y columna de texto aparte |
 | Turbo menos fuerte | Cola corta, 900 partículas, alfa 0,5 |
-| Planetas y estrellas, mismo estilo, más elementos | **Dos** planetas grandes de partículas (pedido posterior: la escena estaba cargada), 6 000 estrellas, tres nubes tenues |
+| Planetas y estrellas, mismo estilo, más elementos | **Dos** planetas de partículas (pedido posterior: la escena estaba cargada), 6 000 estrellas, tres nubes tenues |
 | Viaje con animaciones de Three.js de primer nivel | Director de vuelo (sección 4.5): pasadas junto a planetas, alabeo, mirada de reojo, FOV, líneas de velocidad, Bloom y Vignette |
-| Quitar planetas: dos, grandes | Dos planetas de radio 6,5 y 7,5; sin asteroides ni anillos de estaciones |
+| Quitar planetas: dos, grandes | Dos planetas; sin asteroides ni anillos de estaciones |
+| Puntos de los planetas más pequeños | Puntos de 0,8× el espaciado con tope de 6 px y 60 000 puntos por planeta |
+| Todas las animaciones por debajo del 25 % de la pantalla en escritorio | Planetas de radio 3,6 y 4,2 (21 % y 16 % medidos), cohete a escala 0,95 (~2 % en crucero), retrato de 9 unidades (~9 %); un test acota el radio de los planetas |
