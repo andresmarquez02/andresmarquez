@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { gsap } from "gsap";
 import { useJourneySection } from "../hooks/useJourneySection";
-import TerminalCard from "../components/TerminalCard";
+import TypedBuildLog from "../components/TypedBuildLog";
 import { WHATSAPP_URL } from "../data/contacts";
 
 const LINES = ["hero_line1", "hero_line2"];
@@ -63,21 +63,8 @@ export default function Hero() {
               </span>
             ))}
           </h1>
-          <div data-hero-fade className="mt-8 max-w-[27rem]">
-            <TerminalCard title="~/andres — build" bodyClassName="space-y-2 p-4 font-mono text-[12.5px] leading-6 md:text-[13px]">
-              {BUILD.map(({ cmd, note }) => (
-                <p key={cmd} className="flex gap-x-3">
-                  <span aria-hidden className="text-accent">
-                    ›
-                  </span>
-                  <span className="w-[4.6rem] shrink-0 font-semibold text-fg">{cmd}</span>
-                  <span className="text-fg/65">{t(note)}</span>
-                </p>
-              ))}
-              <p aria-hidden className="text-accent">
-                ›<span className="ms-2 inline-block h-4 w-2 translate-y-0.5 bg-accent/80 motion-safe:animate-pulse" />
-              </p>
-            </TerminalCard>
+          <div data-hero-fade className="mt-8 max-w-[30rem]">
+            <TypedBuildLog steps={BUILD} />
           </div>
           <div data-hero-fade className="mt-8 flex flex-wrap items-center gap-6">
             <a

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useJourneySection } from "../hooks/useJourneySection";
 import { CONTACTS, WHATSAPP_URL } from "../data/contacts";
-import TerminalCard from "../components/TerminalCard";
 import Footer from "../layout/Footer";
 import SectionHeading from "./SectionHeading";
 
@@ -15,7 +14,7 @@ export default function Contact() {
     <section ref={ref} id="contact" className="relative flex min-h-[100dvh] flex-col">
       <div className="flex flex-1 items-end pt-24 md:items-center">
         <div className="mx-auto w-full max-w-6xl px-4">
-          <TerminalCard title="~/contact" className="max-w-xl" bodyClassName="p-5 md:p-6">
+          <div className="max-w-xl">
             <SectionHeading kicker={t("contact_kicker")} title={t("contact_title")} lead={t("contact_lead")} />
             <div className="mt-8 flex items-center gap-4">
               <img
@@ -52,7 +51,7 @@ export default function Contact() {
                 </a>
               ))}
             </div>
-          </TerminalCard>
+          </div>
         </div>
       </div>
       <div className="mx-auto w-full max-w-6xl px-4">
