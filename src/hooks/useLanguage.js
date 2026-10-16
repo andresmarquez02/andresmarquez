@@ -19,6 +19,7 @@ export function useLanguage() {
   useEffect(() => {
     if (i18n.language !== language) i18n.changeLanguage(language);
     localStorage.setItem(STORAGE_KEY, language);
+    document.documentElement.lang = language; // screen readers pick the right voice
   }, [language, i18n]);
 
   const changeLanguage = (next) => {

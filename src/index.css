@@ -3,25 +3,15 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  /* Light theme (default). All tokens are RGB triplets for use with
-     Tailwind's <alpha-value> placeholder. */
-  --bg: 250 250 252;
-  --surface: 255 255 255;
-  --surface-2: 244 244 248;
-  --fg: 17 17 20;
-  --accent: 245 158 11;
-  --violet: 124 58 237;
-}
-
-html.dark {
   color-scheme: dark;
-  --bg: 8 8 11;
+  /* Dark only: the site is a night sky. Tokens are RGB triplets for use with
+     Tailwind's <alpha-value> placeholder. */
+  --bg: 7 7 10;
   --surface: 14 14 18;
-  --surface-2: 22 22 28;
+  --surface-2: 22 22 26;
   --fg: 245 245 247;
   --accent: 252 211 77;
-  --violet: 139 92 246;
+  --signal: 79 140 255;
 }
 
 html {
@@ -57,7 +47,6 @@ body {
   overscroll-behavior: none;
   background: rgb(var(--bg));
   color: rgb(var(--fg));
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
@@ -98,46 +87,6 @@ body {
     black 92%,
     transparent 100%
   );
-}
-
-/* Theme switch (kept) */
-.switch {
-  font-size: 14px;
-  position: relative;
-  display: inline-block;
-  width: 2.5em;
-  height: 1.4em;
-}
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: 0.3s;
-  border-radius: 999px;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 0.9em;
-  width: 0.9em;
-  border-radius: 999px;
-  left: 0.25em;
-  top: 0.2em;
-  background: linear-gradient(135deg, #fcd34d, #f59e0b);
-  transition: 0.3s;
-  box-shadow: 0 0 12px rgba(252, 211, 77, 0.5);
-}
-input:checked + .slider:before {
-  transform: translateX(1.05em);
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.6);
 }
 
 /* Carousel */
@@ -191,11 +140,6 @@ input:checked + .slider:before {
   box-shadow: 0 0 0 1px rgba(252, 211, 77, 0.3),
     0 8px 32px -8px rgba(252, 211, 77, 0.4),
     0 0 60px -20px rgba(252, 211, 77, 0.5);
-}
-.glow-violet {
-  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3),
-    0 8px 32px -8px rgba(139, 92, 246, 0.4),
-    0 0 60px -20px rgba(139, 92, 246, 0.5);
 }
 
 /* Glass card */

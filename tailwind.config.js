@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -21,11 +20,7 @@ export default {
           DEFAULT: "#FCD34D",
           glow: "#F59E0B",
         },
-        flag: {
-          yellow: "#F5C518",
-          blue: "#1D4ED8",
-          red: "#DC2626",
-        },
+        signal: "rgb(var(--signal) / <alpha-value>)",
       },
       fontFamily: {
         sans: ['"Geist"', '"Onest"', "system-ui", "sans-serif"],

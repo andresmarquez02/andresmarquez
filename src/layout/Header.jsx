@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import ItemNav from "./ItemNav";
 import SidebarItem from "./SidebarItem";
 import SidebarLang from "./SidebarLang";
 import SetLang from "./SetLang";
-import ToggleTheme from "./ToggleTheme";
 
 const SCROLL_THRESHOLD = 10;
 
@@ -16,7 +14,6 @@ const NAV_ITEMS = [
 ];
 
 export default function Header() {
-  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -65,9 +62,6 @@ export default function Header() {
             ))}
             <li className="mx-2 h-5 w-px bg-fg/10" />
             <li>
-              <ToggleTheme />
-            </li>
-            <li>
               <SetLang />
             </li>
           </ul>
@@ -96,10 +90,6 @@ export default function Header() {
             {NAV_ITEMS.map((item) => (
               <SidebarItem key={item.url} item={item} onNavigate={closeSidebar} />
             ))}
-            <li className="mt-4 flex items-center gap-3 px-3 py-3">
-              <ToggleTheme />
-              <span className="text-sm text-fg/80">{t("change_theme")}</span>
-            </li>
           </ul>
           <SidebarLang />
         </div>

@@ -7,7 +7,7 @@ export default function SidebarLang() {
 
   return (
     <div className="px-3 py-2">
-      <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+      <p className="mb-2 text-xs uppercase tracking-wider text-fg/50">
         {t("language")}
       </p>
       <div className="flex gap-2">
@@ -16,7 +16,7 @@ export default function SidebarLang() {
             key={code}
             type="button"
             onClick={() => changeLanguage(code)}
-            className="flex-1 rounded-lg border border-gray-200 dark:border-white/10 px-3 py-2 text-sm hover:bg-white/10 transition"
+            className="flex-1 rounded-lg border border-fg/10 px-3 py-2 text-sm transition hover:bg-fg/10"
           >
             {t(labels[code])}
           </button>
