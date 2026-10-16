@@ -19,6 +19,7 @@ export function flybys(z, planets) {
   let swerve = 0;
   let dip = 0;
   let look = 0;
+  let yaw = 0;
   for (const planet of planets) {
     const w = bell(z - planet.z, planet.reach);
     const side = Math.sign(planet.dx);
@@ -27,12 +28,16 @@ export function flybys(z, planets) {
     swerve -= side * w * 0.5;
     dip -= above * w * 1.2;
     look += above * w * 0.8;
+    yaw += side * w * 0.4;
   }
   return {
     bank: clamp(bank, -0.5, 0.5),
     swerve: clamp(swerve, -0.8, 0.8),
     dip: clamp(dip, -1.5, 1.5),
     look: clamp(look, -1, 1),
+    // radians the camera swings round the ship, toward the side away from the
+    // planet: the viewpoint shifts and the planet slides past behind the ship
+    yaw: clamp(yaw, -0.45, 0.45),
   };
 }
 

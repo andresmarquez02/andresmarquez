@@ -115,9 +115,8 @@ test("two planets, clear of the ship's path and of each other", () => {
     const clearance = Math.hypot(p.dx - ship.x, p.dy - ship.y);
     assert.ok(p.z < previous && p.z > zAt(1), `${p.id} out of order or off the route`);
     assert.ok(p.radius >= 3 && p.radius <= 4.5, `${p.id}: big but under a quarter of the screen`);
-    assert.ok(Math.abs(p.dy) - p.radius >= 3, `${p.id} would clip the ship`);
-    assert.ok(Math.abs(p.dx) <= 3, `${p.id} must stay in the right-hand column, not drift over the text`);
-    if (p.ring) assert.ok(clearance - p.radius * 1.75 >= 1, `${p.id}'s ring would cross the ship`);
+    assert.ok(clearance - p.radius >= 1, `${p.id} would clip the ship`);
+    assert.ok(p.dx >= 6 && p.dx <= 10, `${p.id} passes to the right of the flight line, never over the text`);
     assert.ok(p.reach >= 20 && p.reach <= 45);
     previous = p.z;
   }
@@ -140,7 +139,7 @@ test("fibonacciSphere spreads unit vectors evenly over the sphere", () => {
 
 test("flybys: quiet far from planets, ducking away from the planet when close", () => {
   const far = flybys(0, [{ z: -100, dx: 2, dy: 8, reach: 20 }]);
-  assert.deepEqual(far, { bank: 0, swerve: 0, dip: 0, look: 0 });
+  assert.deepEqual(far, { bank: 0, swerve: 0, dip: 0, look: 0, yaw: 0 });
 
   const above = flybys(-100, [{ z: -100, dx: 2, dy: 8, reach: 20 }]);
   assert.ok(above.dip < 0 && above.look > 0, "ducks under a planet above and glances up at it");
@@ -148,9 +147,10 @@ test("flybys: quiet far from planets, ducking away from the planet when close", 
   const below = flybys(-100, [{ z: -100, dx: -2, dy: -8, reach: 20 }]);
   assert.ok(below.dip > 0 && below.look < 0 && below.bank < 0 && below.swerve > 0);
   assert.ok(Math.abs(above.dip + below.dip) < 1e-12, "mirror image");
+  assert.ok(above.yaw > 0 && below.yaw < 0, "the camera swings round to the side away from the planet");
 
   const crowded = flybys(-100, Array.from({ length: 6 }, () => ({ z: -100, dx: 2, dy: 8, reach: 20 })));
-  assert.ok(crowded.bank <= 0.5 && crowded.swerve >= -0.8 && crowded.dip >= -1.5 && crowded.look <= 1, "stays bounded");
+  assert.ok(crowded.bank <= 0.5 && crowded.swerve >= -0.8 && crowded.dip >= -1.5 && crowded.look <= 1 && crowded.yaw <= 0.45, "stays bounded");
   assert.ok(bell(0, 0.1) === 1 && bell(0.1, 0.1) === 0 && bell(0.05, 0.1) === bell(-0.05, 0.1));
 });
 

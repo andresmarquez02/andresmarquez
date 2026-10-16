@@ -7,6 +7,8 @@ import { routePosition, SECTION_IDS } from "./math";
 import { PLANETS } from "./planetData";
 import { CAMERA_OFFSET, frameShift, ROUTE } from "./route";
 
+const Y_AXIS = new Vector3(0, 1, 0);
+
 // Frame-rate independent smoothing factor.
 const damp = (rate, delta) => 1 - Math.exp(-rate * delta);
 
@@ -20,6 +22,7 @@ export default function CameraRig() {
   const goal = useMemo(() => new Vector3(), []);
   const look = useMemo(() => new Vector3(), []);
   const target = useMemo(() => new Vector3(), []);
+  const offset = useMemo(() => new Vector3(), []);
   const state = useMemo(() => ({ ready: false, speed: 0, u: 0, pointerX: 0, pointerY: 0 }), []);
 
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function CameraRig() {
 
     const glance = flybys(focus.z, PLANETS);
 
-    goal.copy(focus).add(CAMERA_OFFSET);
+    goal.copy(focus).add(offset.copy(CAMERA_OFFSET).applyAxisAngle(Y_AXIS, -glance.yaw));
     goal.x += state.pointerX * 0.8;
     goal.y += state.pointerY * 0.5 - glance.look * 0.3;
     goal.z += journey.flow * 2.5;

@@ -178,7 +178,8 @@ export default function Ship({ hullParticles, plumeParticles }) {
     ROUTE.getPoint(u, tmp.focus);
     tmp.pos.x = tmp.focus.x + (tmp.pos.x - tmp.focus.x) * 0.3;
     tmp.pos.y = tmp.focus.y + (tmp.pos.y - tmp.focus.y) * 0.3;
-    tmp.pos.x += dodge.swerve * (1 - morph);
+    // wide screens: the camera swing moves the ship across the frame, so push it back into the right-hand column
+    tmp.pos.x += (wide ? dodge.yaw * 6 : dodge.swerve) * (1 - morph);
     if (wide) tmp.pos.y += dodge.dip * (1 - morph);
     tmp.pos.addScaledVector(cruiseOffset(aspect, tmp.stage), smoothstep(0.2, 1, r) * (1 - morph));
     tmp.pos.addScaledVector(stageOffset("hero", aspect, tmp.stage), heroWeight);
@@ -193,7 +194,7 @@ export default function Ship({ hullParticles, plumeParticles }) {
     tmp.goal.copy(tmp.ascent).slerp(tmp.launch, smoothstep(0, 1, tmp.lift)).slerp(tmp.identity, morph).multiply(tmp.roll);
     ship.quaternion.slerp(tmp.goal, 1 - Math.exp(-5 * delta));
     // Pose and size stay the same from launch to cruise (it must fit the right-hand column).
-    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 0.78 : 1));
+    ship.scale.setScalar(SHIP_SCALE * stageScale(aspect) * (wide ? 0.78 + 0.14 * heroWeight : 1));
     journey.ship = ship;
 
     // R3F copies the `uniforms` props into the materials: write to the materials' own.
