@@ -27,8 +27,8 @@ export default function Hero() {
   }, [ref]);
 
   return (
-    <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-20 md:items-center md:pb-0">
-      <div className="mx-auto w-full max-w-6xl px-4 pt-28">
+    <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-20 md:items-start md:pb-16">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-28 md:pt-8">
         {/* Text in the left ~65% of the screen; the rocket owns the right-hand column. */}
         <div className="lg:max-w-[70%]">
           <p data-hero-fade className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/70">

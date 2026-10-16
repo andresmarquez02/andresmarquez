@@ -60,7 +60,7 @@ export const normalizeSpeed = (unitsPerSecond) => clamp01(unitsPerSecond / SPEED
 // while the reader scrolls down) or straight up (LAUNCH while scrolling back
 // up). It never turns around, so it reads as a rocket taking off, not a car
 // turning. Directions in world space, nose first.
-export const ASCENT_HEADING = [1, 0.55, 0.3];
+export const ASCENT_HEADING = [1, 0.62, 0.3];
 export const LAUNCH_HEADING = [0.3, 1, 0.1];
 
 // How fast the flight *feels*, 0..1: the real scroll speed, but never below a
