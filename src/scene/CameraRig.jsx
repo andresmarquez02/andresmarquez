@@ -1,0 +1,74 @@
+import { useEffect, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { Vector3 } from "three";
+import { journey } from "./journey";
+import { flybys, fovFor, normalizeSpeed } from "./flight";
+import { routePosition, SECTION_IDS } from "./math";
+import { PLANETS } from "./planetData";
+import { CAMERA_OFFSET, ROUTE } from "./route";
+
+// Frame-rate independent smoothing factor.
+const damp = (rate, delta) => 1 - Math.exp(-rate * delta);
+
+// Flies the camera along the route as the reader scrolls. Reads the scroll,
+// publishes how fast we are going (journey.speed) and adds the cinematic
+// layer: a glance at passing planets, a slight roll into them, a wider lens
+// when going fast and a little pointer parallax.
+export default function CameraRig() {
+  const focus = useMemo(() => new Vector3(), []);
+  const previous = useMemo(() => new Vector3(), []);
+  const goal = useMemo(() => new Vector3(), []);
+  const look = useMemo(() => new Vector3(), []);
+  const target = useMemo(() => new Vector3(), []);
+  const state = useMemo(() => ({ ready: false, speed: 0, pointerX: 0, pointerY: 0 }), []);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      state.pointerX = (e.clientX / window.innerWidth) * 2 - 1;
+      state.pointerY = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [state]);
+
+  useFrame(({ camera }, rawDelta) => {
+    const delta = Math.min(rawDelta, 0.1); // a hidden tab must not teleport the camera
+    const u = routePosition(journey.section) / (SECTION_IDS.length - 1);
+    ROUTE.getPoint(u, focus);
+
+    if (!state.ready) {
+      state.ready = true;
+      previous.copy(focus);
+      camera.position.copy(focus).add(CAMERA_OFFSET);
+      look.copy(focus);
+    }
+    if (delta > 0) {
+      const perSecond = focus.distanceTo(previous) / delta;
+      state.speed += (perSecond - state.speed) * damp(5, delta);
+    }
+    previous.copy(focus);
+    journey.speed = normalizeSpeed(state.speed);
+
+    const glance = flybys(focus.z, PLANETS);
+
+    goal.copy(focus).add(CAMERA_OFFSET);
+    goal.x += state.pointerX * 0.8 - glance.look * 0.45;
+    goal.y += state.pointerY * 0.5;
+    goal.z += journey.speed * 2.5;
+    camera.position.lerp(goal, damp(4, delta));
+
+    target.copy(focus);
+    target.x += glance.look;
+    look.lerp(target, damp(4, delta));
+    camera.lookAt(look);
+    camera.rotateZ(-glance.bank * 0.1);
+
+    const fov = fovFor(journey.speed);
+    if (Math.abs(camera.fov - fov) > 0.01) {
+      camera.fov += (fov - camera.fov) * damp(3, delta);
+      camera.updateProjectionMatrix();
+    }
+  });
+
+  return null;
+}

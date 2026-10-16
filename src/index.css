@@ -49,6 +49,32 @@ body {
   color: rgb(var(--fg));
 }
 
+/* Keeps text on the left readable wherever a planet or nebula drifts by. */
+.scene-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(var(--bg) / 0.72) 0%, rgb(var(--bg) / 0.4) 38%, transparent 62%);
+}
+@media (max-width: 767px) {
+  .scene-scrim {
+    background: linear-gradient(0deg, rgb(var(--bg) / 0.6) 0%, transparent 55%);
+  }
+}
+
+/* Static backdrop used when the 3D scene is off (no WebGL, reduced motion). */
+.scene-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 80% 20%, rgb(var(--accent) / 0.12), transparent 70%),
+    radial-gradient(50% 40% at 10% 90%, rgb(var(--signal) / 0.12), transparent 70%),
+    rgb(var(--bg));
+}
+
 ::selection {
   background: rgb(var(--accent) / 0.35);
   color: rgb(var(--fg));
