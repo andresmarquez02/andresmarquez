@@ -1,36 +1,101 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CONTACTS } from "../data/contacts";
+import { CONTACTS, EMAIL, WHATSAPP_URL } from "../data/contacts";
+import { useInView } from "../hooks/useInView";
+
+const FooterScene = lazy(() => import("../scene/FooterScene"));
+
+const PAGES = [
+  { href: "#top", label: "nav_home" },
+  { href: "#services", label: "nav_services" },
+  { href: "#process", label: "nav_process" },
+  { href: "#work", label: "nav_work" },
+  { href: "#experience", label: "nav_experience" },
+];
+
+const SOCIALS = CONTACTS.filter((c) => !c.url.startsWith("mailto:") && !c.url.startsWith("https://wa.me"));
+
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export default function Footer() {
   const { t } = useTranslation();
-  const year = new Date().getFullYear();
+  const [showTop, setShowTop] = useState(false);
+  const [footRef, seen] = useInView(0.05);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 900);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <footer className="mt-6 pb-8">
-      <div className="mb-8 h-px bg-gradient-to-r from-transparent via-fg/15 to-transparent" />
-      <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-fg/45">
-          <span className="text-fg/70">© {year}</span>{" "}
-          <span>Andrés Márquez</span>{" "}
-          <span aria-hidden className="mx-2 text-fg/25">/</span>{" "}
-          <span>{t("footer_built")}</span>
-        </p>
-        <ul className="flex items-center gap-2">
-          {CONTACTS.map(({ icon, url, name }) => (
-            <li key={url}>
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t(name)}
-                className="inline-flex size-10 items-center justify-center rounded-full border border-fg/10 bg-fg/5 text-fg/70 transition hover:border-fg/30 hover:bg-fg/10 hover:text-fg"
-              >
-                <i className={`${icon} text-base`} aria-hidden />
-              </a>
-            </li>
+    <footer ref={footRef} className="site-footer">
+      {seen && !reducedMotion() && (
+        <div className="foot-scene" aria-hidden>
+          <Suspense fallback={null}>
+            <FooterScene />
+          </Suspense>
+        </div>
+      )}
+
+      <p className="foot-mark" aria-hidden>
+        <span>andrés márquez</span>
+      </p>
+
+      <div className="foot-mid">
+        <div className="foot-lede">
+          <p>
+            {t("contact_about")} <strong>{t("contact_lead")}</strong>
+          </p>
+          <div className="foot-contact">
+            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">+58 412 929 8833</a>
+            <span>{t("foot_where")}</span>
+          </div>
+        </div>
+        <div className="foot-cta">
+          <p>{t("menu_heading")}</p>
+          <a className="foot-pill foot-pill--solid" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            <i className="lab la-whatsapp" aria-hidden />
+            {t("cta_wa")}
+          </a>
+          <a className="foot-pill" href={`mailto:${EMAIL}`}>
+            <i className="lar la-envelope" aria-hidden />
+            {t("hero_cta")}
+          </a>
+        </div>
+      </div>
+
+      <div className="foot-links">
+        <nav aria-label={t("foot_pages")}>
+          <ul>
+            {PAGES.map((p) => (
+              <li key={p.href}><a href={p.href}>{t(p.label)}</a></li>
+            ))}
+          </ul>
+        </nav>
+        <ul>
+          {SOCIALS.map(({ url, name }) => (
+            <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">{t(name)}</a></li>
           ))}
         </ul>
+        <div className="foot-small">
+          <span>© {new Date().getFullYear()} Andrés Márquez · {t("foot_rights")}</span>
+          <span>{t("footer_built")}</span>
+        </div>
       </div>
+
+      <button
+        type="button"
+        className={`to-top ${showTop ? "is-visible" : ""}`}
+        aria-label={t("foot_top")}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+      </button>
     </footer>
   );
 }

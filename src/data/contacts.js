@@ -1,7 +1,9 @@
+export const EMAIL = "andres03marquez@gmail.com";
+
 export const CONTACTS = [
   {
     icon: "lar la-envelope",
-    url: "mailto:andres03marquez@gmail.com",
+    url: `mailto:${EMAIL}`,
     name: "contact_me",
   },
   {

@@ -1,90 +1,87 @@
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { gsap } from "gsap";
-import { useJourneySection } from "../hooks/useJourneySection";
-import TypedBuildLog from "../components/TypedBuildLog";
 import { WHATSAPP_URL } from "../data/contacts";
+import Arrow from "../components/Arrow";
 
-const LINES = ["hero_line1", "hero_line2"];
-// The "how" behind the headline, as a build log: design, develop, automate.
-const BUILD = [
-  { cmd: "design", note: "hero_term_design" },
-  { cmd: "develop", note: "hero_term_develop" },
-  { cmd: "automate", note: "hero_term_automate" },
+const PROOF_LOGOS = [
+  { src: "/images/andres.jpg", photo: true },
+  { src: "/images/chevrolet.png" },
+  { src: "/images/gmc.png" },
+  { src: "/images/ford.png" },
 ];
+
+const STATS = [
+  { value: "100+", label: "hero_stat1" },
+  { value: "500+", label: "hero_stat2" },
+  { value: "−40%", label: "hero_stat3" },
+  { value: "+80%", label: "hero_stat4" },
+];
+
+// Splits a line into words so each can blur in with its own delay.
+const Words = ({ text, start = 0 }) =>
+  text.split(" ").map((word, i) => (
+    <span key={`${word}-${i}`} className="ko2-w" style={{ "--wi": start + i }}>
+      {word}
+      {" "}
+    </span>
+  ));
 
 export default function Hero() {
   const { t } = useTranslation();
-  const ref = useJourneySection("hero", undefined, { start: "top top+=80" });
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-    mm.add(
-      "(prefers-reduced-motion: no-preference)",
-      () => {
-        gsap
-          .timeline({ defaults: { ease: "expo.out" } })
-          .from("[data-hero-line]", { yPercent: 105, duration: 1, stagger: 0.08 })
-          .from("[data-hero-fade]", { autoAlpha: 0, y: 12, duration: 0.7, stagger: 0.06 }, 0.3);
-      },
-      ref
-    );
-    return () => mm.revert();
-  }, [ref]);
+  const line1 = t("hero_h_1");
+  const count = line1.split(" ").length;
 
   return (
-    <section ref={ref} id="hero" className="relative flex min-h-[100dvh] items-end pb-12 md:min-h-[84dvh] md:items-start md:pb-6">
-      <div className="mx-auto w-full max-w-6xl px-4 pt-28 md:pt-8">
-        {/* Text in the left ~65% of the screen; the rocket owns the right-hand column. */}
-        <div className="lg:max-w-[70%]">
-          <p data-hero-fade className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/70">
-            <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-            {t("availability")}
-          </p>
-          <p data-hero-fade className="mt-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fg/50">
-            {t("hero_kicker")}
-          </p>
-          <h1
-            className="mt-8 font-display font-bold leading-[0.92] tracking-[-0.03em]"
-            style={{ fontSize: "clamp(2.5rem, 6.2vw, 5.75rem)" }}
-          >
-            {LINES.map((key, i) => (
-              <span key={key} className="block overflow-hidden pb-[0.06em]">
-                <span
-                  data-hero-line
-                  className={`block ${
-                    i === LINES.length - 1
-                      ? "bg-gradient-to-r from-accent to-signal bg-clip-text text-transparent"
-                      : "text-fg"
-                  }`}
-                >
-                  {t(key)}
-                </span>
+    <section id="top" className="ko2-hero">
+      <h1 className="ko2-h1">{t("hero_rail")}</h1>
+      <div className="ko2-inner">
+        <header className="ko2-head">
+          <p className="ko2-headline" role="presentation">
+            <span className="ko2-hline">
+              <Words text={line1} />
+            </span>
+            <span className="ko2-hline ko2-hline-accent">
+              <span className="ko2-w ko2-accent" style={{ "--wi": count }}>
+                {t("hero_h_accent")}
               </span>
+            </span>
+          </p>
+          <p className="ko2-lede">
+            {t("hero_lede_a")} <strong>{t("hero_lede_b")}</strong>. {t("hero_lede_c")}
+          </p>
+          <ul className="hero-stats">
+            {STATS.map(({ value, label }) => (
+              <li key={label}>
+                <b>{value}</b>
+                <span>{t(label)}</span>
+              </li>
             ))}
-          </h1>
-          <div data-hero-fade className="mt-8 max-w-[30rem]">
-            <TypedBuildLog steps={BUILD} />
-          </div>
-          <div data-hero-fade className="mt-8 flex flex-wrap items-center gap-6">
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-ink-950 transition glow-accent hover:bg-accent-glow"
-            >
-              <i className="lab la-whatsapp text-lg" aria-hidden />
-              {t("contact_me")}
+          </ul>
+          <div className="ko2-actions">
+            <a className="ko2-btn" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              {t("hero_cta")}
+              <Arrow size={18} />
             </a>
-            <a
-              href="#process"
-              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-fg/60 transition hover:text-fg"
-            >
-              {t("hero_scroll")}
-              <span aria-hidden>↓</span>
-            </a>
+            <div className="ko2-proof">
+              <span className="avatar-stack" aria-hidden>
+                {PROOF_LOGOS.map(({ src, photo }) => (
+                  <span key={src} className={`avatar ${photo ? "photo" : ""}`}>
+                    <img src={src} alt="" width="26" height="26" />
+                  </span>
+                ))}
+              </span>
+              <span className="ko2-score">
+                <span className="pulse-dot" aria-hidden />
+                {t("availability")}
+              </span>
+              <span className="ko2-proof-label">{t("hero_proof")}</span>
+            </div>
           </div>
-        </div>
+        </header>
+      </div>
+      <div className="ko2-markwrap" aria-hidden>
+        <p className="ko2-mark">
+          <span className="ko2-mark-word">andrés</span>
+        </p>
       </div>
     </section>
   );

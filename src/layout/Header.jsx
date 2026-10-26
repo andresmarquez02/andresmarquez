@@ -1,97 +1,137 @@
 import { useEffect, useState } from "react";
-import ItemNav from "./ItemNav";
-import SidebarItem from "./SidebarItem";
-import SidebarLang from "./SidebarLang";
-import SetLang from "./SetLang";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../hooks/useLanguage";
+import { useTheme } from "../hooks/useTheme";
+import { CONTACTS, EMAIL, WHATSAPP_URL } from "../data/contacts";
 
-const SCROLL_THRESHOLD = 10;
-
-const NAV_ITEMS = [
-  { url: "#process", label: "nav_process", icon: "las la-cogs" },
-  { url: "#automation", label: "nav_ai", icon: "las la-robot" },
-  { url: "#work", label: "nav_work", icon: "las la-laptop" },
-  { url: "#contact", label: "contact", icon: "lar la-envelope" },
+const NAV = [
+  { href: "#services", label: "nav_services" },
+  { href: "#process", label: "nav_process" },
+  { href: "#work", label: "nav_work" },
+  { href: "#experience", label: "nav_experience" },
+  { href: "#contact", label: "nav_contact" },
 ];
 
+const SOCIALS = CONTACTS.filter((c) => !c.url.startsWith("mailto:") && !c.url.startsWith("https://wa.me"));
+
+const Sun = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+  </svg>
+);
+const Moon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+  </svg>
+);
+
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { t } = useTranslation();
+  const { language, changeLanguage } = useLanguage();
+  const { theme, toggle } = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    if (!isSidebarOpen) return;
-    const handleKey = (event) => {
-      if (event.key === "Escape") setIsSidebarOpen(false);
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.documentElement.classList.add("lenis-stopped");
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.documentElement.classList.remove("lenis-stopped");
     };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [isSidebarOpen]);
+  }, [open]);
 
-  const closeSidebar = () => setIsSidebarOpen(false);
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const close = () => setOpen(false);
+  const otherLang = language === "en" ? "es" : "en";
 
   return (
     <>
-      <header className="sticky top-0 z-30 mx-auto flex h-16 w-full items-center justify-center px-4 md:h-20 md:pt-4">
-        <nav
-          aria-label="Main"
-          className={`relative flex h-12 w-full items-center justify-between rounded-full border px-3 transition-all duration-300 md:w-auto md:gap-1 md:px-2 ${
-            isScrolled || isSidebarOpen
-              ? "border-fg/10 bg-surface/70 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)] backdrop-blur-xl"
-              : "border-transparent bg-transparent"
-          }`}
-        >
-          <a
-            href="#hero"
-            aria-label="Home"
-            className="ml-2 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-fg/80 hover:text-fg"
-          >
-            <span className="size-2 rounded-full bg-accent shadow-[0_0_8px_rgba(252,211,77,0.8)]" />
-            AM
+      <a className="skip-link" href="#main">{t("skip")}</a>
+      <header className={`site-header-wrap ${scrolled ? "is-scrolled" : ""}`}>
+        <div className="site-header">
+          <a href="#top" className="site-logo" aria-label={t("nav_home")}>
+            am<span>.</span>
           </a>
-          <ul className="hidden items-center md:flex">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.url}>
-                <ItemNav item={item} />
-              </li>
+          <nav className="site-nav-center" aria-label="Primary">
+            {NAV.map((item) => (
+              <a key={item.href} href={item.href} className="nav-link">{t(item.label)}</a>
             ))}
-            <li className="mx-2 h-5 w-px bg-fg/10" />
-            <li>
-              <SetLang />
-            </li>
-          </ul>
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            aria-label="Toggle navigation menu"
-            aria-expanded={isSidebarOpen}
-            aria-controls="mobile-sidebar"
-            className="md:hidden inline-flex size-10 items-center justify-center rounded-full text-xl text-fg/80 transition hover:bg-fg/10 hover:text-fg"
-          >
-            <i className={isSidebarOpen ? "las la-times" : "las la-bars"} aria-hidden />
-          </button>
-        </nav>
+          </nav>
+          <div className="site-nav-actions">
+            <button type="button" className="icon-btn" onClick={() => changeLanguage(otherLang)} aria-label={`Language: ${otherLang}`}>
+              {otherLang}
+            </button>
+            <button type="button" className="icon-btn" onClick={toggle} aria-label={theme === "dark" ? t("theme_light") : t("theme_dark")}>
+              {theme === "dark" ? <Sun /> : <Moon />}
+            </button>
+            <button type="button" className="hamburger" aria-label={t("menu_open")} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen(true)}>
+              <span className="hamburger-bar hamburger-bar-1" />
+              <span className="hamburger-bar hamburger-bar-2" />
+            </button>
+          </div>
+        </div>
       </header>
 
-      <aside
-        id="mobile-sidebar"
-        inert={!isSidebarOpen}
-        className={`md:hidden fixed top-16 right-0 z-20 h-[calc(100dvh-4rem)] w-full transition-transform duration-300 ease-out ${
-          isSidebarOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="h-full overflow-y-auto bg-surface/95 px-4 py-6 backdrop-blur-xl">
-          <ul className="flex flex-col gap-1">
-            {NAV_ITEMS.map((item) => (
-              <SidebarItem key={item.url} item={item} onNavigate={closeSidebar} />
-            ))}
-          </ul>
-          <SidebarLang />
+      <div className={`menu-backdrop ${open ? "is-open" : ""}`} onClick={close} aria-hidden />
+      <aside id="site-menu" className={`menu-drawer ${open ? "is-open" : ""}`} role="dialog" aria-modal="true" aria-label="Site menu" inert={!open}>
+        <button type="button" className="menu-close" aria-label={t("menu_close")} onClick={close}>
+          <span />
+          <span />
+        </button>
+        <div className="menu-scroll" data-lenis-prevent>
+          <nav aria-label={t("menu_pages")}>
+            <ul className="menu-nav-list">
+              <li><a className="menu-nav-link" href="#top" onClick={close}>{t("nav_home")}</a></li>
+              {NAV.map((item) => (
+                <li key={item.href}>
+                  <a className="menu-nav-link" href={item.href} onClick={close}>{t(item.label)}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <p className="menu-heading">{t("menu_heading")}</p>
+          <p className="menu-lede">{t("menu_lede")}</p>
+          <div className="menu-actions">
+            <a className="menu-btn" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <i className="lab la-whatsapp" aria-hidden />
+              {t("cta_wa")}
+            </a>
+            <a className="menu-btn menu-btn--ghost" href={`mailto:${EMAIL}`}>
+              <i className="lar la-envelope" aria-hidden />
+              {t("hero_cta")}
+            </a>
+          </div>
+          <div>
+            <p className="menu-eyebrow">{t("menu_direct")}</p>
+            <ul className="menu-direct">
+              <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+              <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">+58 412 929 8833</a></li>
+            </ul>
+          </div>
+          <div>
+            <p className="menu-eyebrow">{t("menu_social")}</p>
+            <ul className="menu-socials">
+              {SOCIALS.map(({ url, name }) => (
+                <li key={url}>
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    {t(name)}
+                    <span aria-hidden>→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p className="menu-footnote">© {new Date().getFullYear()} Andrés Márquez</p>
         </div>
       </aside>
     </>

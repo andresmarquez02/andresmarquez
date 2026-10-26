@@ -17,11 +17,11 @@ export const AI_CONTEXT = [
 ];
 
 export const CASES = [
-  { id: "qsm", client: "QSM", tools: ["n8n", "Gemini", "Next.js", "Supabase"] },
-  { id: "mcontigo", client: "MContigo", tools: ["Python", "pandas", "Deepnote", "Google Sheets API"] },
-  { id: "inventory", client: "Leadbox", tools: ["Python", "GraphQL"] },
-  { id: "erp", client: "Distribuciones Marver", tools: ["Laravel", "GoHighLevel", "OAuth 2.0", "Twilio"] },
-  { id: "qa", client: "Leadbox", tools: ["Playwright", "OWASP ZAP", "TypeScript"] },
+  { id: "qsm", big: "qsm", client: "QSM", tools: ["n8n", "Gemini", "Next.js", "Supabase"] },
+  { id: "mcontigo", big: "mcontigo", client: "MContigo", tools: ["Python", "pandas", "Deepnote", "Google Sheets API"] },
+  { id: "inventory", big: "leadbox", client: "Leadbox", tools: ["Python", "GraphQL"] },
+  { id: "erp", big: "marver", client: "Distribuciones Marver", tools: ["Laravel", "GoHighLevel", "OAuth 2.0", "Twilio"] },
+  { id: "qa", big: "qa", client: "Leadbox", tools: ["Playwright", "OWASP ZAP", "TypeScript"] },
 ];
 
 export const STACK_GROUPS = [
@@ -42,4 +42,17 @@ export const EXPERIENCES = [
   { id: "exp2", date: "date_exp2", title: "title_exp2", description: "description_exp2" },
   { id: "exp3", date: "date_exp3", title: "title_exp3", description: "description_exp3" },
   { id: "exp4", date: "date_exp4", title: "title_exp4", description: "description_exp4" },
+];
+
+// Work panels: screenshots live in public/images/projects. `url` is omitted for
+// projects that are not public (the Multiparadise redesign runs locally). Private
+// automations have no screenshot: `visual` picks the illustration shown in the frame.
+export const PROJECTS = [
+  { id: "ottawa", big: "ottawa ford", image: "ottawa-ford", url: "https://www.ottawaforddealers.com/", tools: ["WordPress", "Child theme", "Custom design"] },
+  { id: "qsm", big: "qsm", visual: "n8n", tools: ["n8n", "Gemini", "Next.js", "Supabase"] },
+  { id: "mdpr", big: "mi doctor", image: "mi-doctor-pr", url: "https://midoctorpr.com/", tools: ["Directory", "Online booking", "Web app"] },
+  { id: "leadbox", big: "leadbox", image: "leadbox", url: "https://leadboxhq.com/", tools: ["WordPress", "Vue.js", "Integrations", "Automations"] },
+  { id: "mcontigo", big: "mcontigo", visual: "pipeline", tools: ["Python", "pandas", "Google Sheets API"] },
+  { id: "dropanas", big: "dropanas", image: "dropanas", url: "https://dropanas.com/", tools: ["Laravel", "Admin modules", "Dropshipping"] },
+  { id: "multi", big: "multiparadise", image: "multiparadise", tools: ["Laravel 13", "Vue 3", "Inertia", "Tailwind 4"] },
 ];

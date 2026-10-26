@@ -26,7 +26,7 @@ export default [
     },
   },
   {
-    // React Three Fiber elements take three.js props that the DOM rule doesn't know.
+    // React Three Fiber elements take three.js props that the DOM rule does not know.
     files: ["src/scene/**/*.jsx"],
     rules: { "react/no-unknown-property": "off" },
   },

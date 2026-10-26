@@ -1,32 +1,29 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "./layout/Header";
-import ScrollRail from "./layout/ScrollRail";
-import StatusBar from "./layout/StatusBar";
-import Automation from "./sections/Automation";
+import Footer from "./layout/Footer";
+import Brands from "./sections/Brands";
 import Contact from "./sections/Contact";
+import Experience from "./sections/Experience";
+import Familiar from "./sections/Familiar";
 import Hero from "./sections/Hero";
 import Process from "./sections/Process";
-import Stack from "./sections/Stack";
+import Services from "./sections/Services";
+import Statement from "./sections/Statement";
 import Work from "./sections/Work";
-import SceneBoundary from "./scene/SceneBoundary";
-import { detectTier } from "./scene/quality";
 import { useLenis } from "./hooks/useLenis";
-
-const Scene = lazy(() => import("./scene/Scene"));
+import { useMotion } from "./hooks/useMotion";
 
 export default function App() {
   useLenis();
   const { i18n } = useTranslation();
-  const [tier, setTier] = useState(detectTier);
-  const immersive = tier !== "off";
-  const disableScene = () => setTier("off");
+  useMotion(i18n.language);
 
-  // Section heights change with the language and the tier; triggers must follow.
+  // Section heights change with the language; pinned triggers must follow.
   useEffect(() => {
     ScrollTrigger.refresh();
-  }, [i18n.language, tier]);
+  }, [i18n.language]);
 
   // Web fonts change text metrics once loaded; recompute trigger windows.
   useEffect(() => {
@@ -34,29 +31,20 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative text-fg">
-      {immersive ? (
-        <SceneBoundary onFail={disableScene}>
-          <Suspense fallback={null}>
-            <Scene tier={tier} onFail={disableScene} onSlow={disableScene} />
-          </Suspense>
-        </SceneBoundary>
-      ) : (
-        <div aria-hidden="true" className="scene-fallback" />
-      )}
-      {immersive && <div className="scene-scrim" />}
-      <div className="grain" />
+    <>
       <Header />
-      <StatusBar />
-      <ScrollRail />
-      <main className="relative z-10">
+      <main id="main" tabIndex={-1}>
         <Hero />
+        <Familiar />
+        <Statement />
+        <Services />
         <Process />
-        <Automation />
-        <Stack />
         <Work />
+        <Brands />
+        <Experience />
         <Contact />
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }
