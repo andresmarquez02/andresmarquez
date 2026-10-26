@@ -5,14 +5,6 @@ import { useInView } from "../hooks/useInView";
 
 const FooterScene = lazy(() => import("../scene/FooterScene"));
 
-const PAGES = [
-  { href: "#top", label: "nav_home" },
-  { href: "#services", label: "nav_services" },
-  { href: "#process", label: "nav_process" },
-  { href: "#work", label: "nav_work" },
-  { href: "#experience", label: "nav_experience" },
-];
-
 const SOCIALS = CONTACTS.filter((c) => !c.url.startsWith("mailto:") && !c.url.startsWith("https://wa.me"));
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -68,13 +60,6 @@ export default function Footer() {
       </div>
 
       <div className="foot-links">
-        <nav aria-label={t("foot_pages")}>
-          <ul>
-            {PAGES.map((p) => (
-              <li key={p.href}><a href={p.href}>{t(p.label)}</a></li>
-            ))}
-          </ul>
-        </nav>
         <ul>
           {SOCIALS.map(({ url, name }) => (
             <li key={url}><a href={url} target="_blank" rel="noopener noreferrer">{t(name)}</a></li>
