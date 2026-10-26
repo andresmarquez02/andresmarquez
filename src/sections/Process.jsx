@@ -35,7 +35,7 @@ export default function Process() {
           });
           gsap.from(row, {
             autoAlpha: 0,
-            x: 36,
+            y: 24,
             duration: 0.8,
             ease: "power3.out",
             scrollTrigger: { trigger: row, start: "top 90%", once: true },
