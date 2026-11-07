@@ -21,7 +21,9 @@ export default function Work() {
 
   useEffect(() => {
     const mm = gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", phone: "(max-width: 879px)" }, (ctx) => {
+      const { motion, phone } = ctx.conditions;
+      if (!motion) return;
       const track = trackRef.current;
       const panels = gsap.utils.toArray(".pf-panel", track);
       const distance = () => track.scrollWidth - window.innerWidth;
@@ -32,9 +34,10 @@ export default function Work() {
         scrollTrigger: {
           trigger: pinRef.current,
           start: "top top",
-          end: () => `+=${distance()}`,
+          // Phones get a longer runway and a smoothed scrub so a flick doesn't fling the panels.
+          end: () => `+=${distance() * (phone ? 1.6 : 1)}`,
           pin: true,
-          scrub: true,
+          scrub: phone ? 0.8 : true,
           invalidateOnRefresh: true,
         },
       });
@@ -45,26 +48,44 @@ export default function Work() {
         const img = panel.querySelector(".pf-frame img");
         const link = { containerAnimation: slide, scrub: true };
 
-        // Same choreography as sixo.agency: the name pivots on a point just above its top-left
-        // corner. Entering, it starts upright against the panel's left edge (reading top to
-        // bottom); leaving, it swings up against the right edge (reading bottom to top).
-        // expo.inOut keeps it upright most of the way and flips it fast mid-screen.
-        // Order matters: the exit tween must be created first so it records the resting pose
-        // as its start; the entrance tween then pre-rotates the title for the first frame.
-        gsap.to(title, {
-          rotation: -90,
-          x: () => window.innerWidth - title.offsetHeight,
-          y: () => title.offsetHeight,
-          ease: "expo.inOut",
-          scrollTrigger: { ...link, trigger: panel, start: "left 0%", end: "left -100%", invalidateOnRefresh: true },
-        });
-        gsap.from(title, {
-          rotation: 90,
-          x: () => title.offsetHeight,
-          y: () => -window.innerHeight + title.offsetHeight,
-          ease: "expo.inOut",
-          scrollTrigger: { ...link, trigger: panel, start: "left 100%", end: "left 0%", invalidateOnRefresh: true },
-        });
+        if (phone) {
+          // On a narrow screen the 90° swing happens in a few hundred pixels of scroll and
+          // covers the copy, so the name just eases in from the right, lagging behind its
+          // panel, and drifts out softly. It never rotates, so it stays readable.
+          gsap.to(title, {
+            x: () => window.innerWidth * 0.3,
+            autoAlpha: 0,
+            ease: "power1.in",
+            scrollTrigger: { ...link, trigger: panel, start: "left 0%", end: "left -80%", invalidateOnRefresh: true },
+          });
+          gsap.from(title, {
+            x: () => window.innerWidth * 0.45,
+            autoAlpha: 0,
+            ease: "power2.out",
+            scrollTrigger: { ...link, trigger: panel, start: "left 100%", end: "left 5%", invalidateOnRefresh: true },
+          });
+        } else {
+          // Same choreography as sixo.agency: the name pivots on a point just above its top-left
+          // corner. Entering, it starts upright against the panel's left edge (reading top to
+          // bottom); leaving, it swings up against the right edge (reading bottom to top).
+          // expo.inOut keeps it upright most of the way and flips it fast mid-screen.
+          // Order matters: the exit tween must be created first so it records the resting pose
+          // as its start; the entrance tween then pre-rotates the title for the first frame.
+          gsap.to(title, {
+            rotation: -90,
+            x: () => window.innerWidth - title.offsetHeight,
+            y: () => title.offsetHeight,
+            ease: "expo.inOut",
+            scrollTrigger: { ...link, trigger: panel, start: "left 0%", end: "left -100%", invalidateOnRefresh: true },
+          });
+          gsap.from(title, {
+            rotation: 90,
+            x: () => title.offsetHeight,
+            y: () => -window.innerHeight + title.offsetHeight,
+            ease: "expo.inOut",
+            scrollTrigger: { ...link, trigger: panel, start: "left 100%", end: "left 0%", invalidateOnRefresh: true },
+          });
+        }
         // The screenshot scrolls for the whole time its panel is on screen.
         if (img && frame) {
           gsap.fromTo(
